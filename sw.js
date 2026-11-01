@@ -1,5 +1,5 @@
 // Essence · proba: păstrează aplicația pe telefon, ca să se deschidă și fără rețea.
-const VERSIUNE = 'essence-proba-1';
+const VERSIUNE = 'essence-proba-2';
 const FISIERE = ['./', 'index.html', 'galerie.html', 'galerie.js', 'galerie.css', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {

@@ -146,27 +146,32 @@ function ecran() {
 ecran(); addEventListener('resize', ecran);
 
 const vv = window.visualViewport;
-let inaltimeInitiala = innerHeight, tastMax = 0, jurnal = [];
+let inaltimeInitiala = innerHeight, vizMax = 0, redimMax = 0, jurnal = [];
 function tastatura() {
-  const kbVizual = vv ? Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) : 0;
+  const activ = document.activeElement === $('camp');
+  const kbVizual = vv ? Math.max(0, Math.round(innerHeight - vv.height * (vv.scale || 1) - vv.offsetTop)) : 0;
   const kbRedim = Math.max(0, inaltimeInitiala - innerHeight);
-  const kb = Math.max(kbVizual, kbRedim);
-  tastMax = Math.max(tastMax, kb);
-  if ($('bara').classList.contains('deschisa')) $('bara').style.transform = kbVizual ? `translateY(${-kbVizual}px)` : '';
-  Object.assign(raport, { tastaturaMax: tastMax, felTastatura: kbRedim > 0 ? 'pagina se micșorează' : kbVizual > 0 ? 'vederea se micșorează' : 'nevăzută de pagină' });
+  const plauzibil = (v) => v > 0 && v < innerHeight * 0.75 + kbRedim;
+  if (activ && (!vv || Math.abs((vv.scale || 1) - 1) < 0.01)) {
+    if (plauzibil(kbVizual)) vizMax = Math.max(vizMax, kbVizual);
+    if (plauzibil(kbRedim)) redimMax = Math.max(redimMax, kbRedim);
+  }
+  if ($('bara').classList.contains('deschisa')) $('bara').style.transform = activ && plauzibil(kbVizual) ? `translateY(${-kbVizual}px)` : '';
+  const fel = redimMax > 0 ? 'pagina se micșorează' : vizMax > 0 ? 'vederea se micșorează' : 'nevăzută de pagină';
+  Object.assign(raport, { tastaturaVedere: vizMax, tastaturaPagina: redimMax, felTastatura: fel, zoom: vv ? nr(vv.scale) : '?' });
   randuri($('tast'), [
-    ['Tastatura văzută de pagină', kb ? kb + ' px' : '—', kb ? 'ok' : ''],
-    ['Cea mai înaltă măsurată', tastMax ? tastMax + ' px' : '—'],
-    ['Cum o vede pagina', raport.felTastatura],
+    ['Tastatura, din vedere', vizMax ? vizMax + ' px' : '—', vizMax ? 'ok' : ''],
+    ['Tastatura, din micșorarea paginii', redimMax ? redimMax + ' px' : '—', redimMax ? 'ok' : ''],
+    ['Cum o vede pagina', fel],
   ]);
-  if (document.activeElement === $('camp')) {
-    jurnal.unshift(`${new Date().toLocaleTimeString('ro-RO')}  pagină ${innerHeight}  vedere ${vv ? Math.round(vv.height) : '?'}  deplasare ${vv ? Math.round(vv.offsetTop) : '?'}  tastatură ${kb}`);
+  if (activ) {
+    jurnal.unshift(`${new Date().toLocaleTimeString('ro-RO')}  pagină ${innerHeight}  vedere ${vv ? Math.round(vv.height) : '?'}  deplasare ${vv ? Math.round(vv.offsetTop) : '?'}  zoom ${vv ? nr(vv.scale) : '?'}`);
     jurnal = jurnal.slice(0, 12); $('jurnal').textContent = jurnal.join('\n');
   }
 }
 if (vv) { vv.addEventListener('resize', tastatura); vv.addEventListener('scroll', tastatura); }
 addEventListener('resize', tastatura); tastatura();
-$('tastatura').onclick = () => { inaltimeInitiala = innerHeight; $('bara').classList.add('deschisa'); $('camp').focus(); };
+$('tastatura').onclick = () => { inaltimeInitiala = innerHeight; $('bara').classList.add('deschisa'); $('camp').focus(); setTimeout(tastatura, 400); setTimeout(tastatura, 900); };
 $('gata').onpointerdown = (e) => e.preventDefault();
 $('gata').onclick = () => { $('camp').blur(); $('bara').classList.remove('deschisa'); $('bara').style.transform = ''; };
 
@@ -226,7 +231,7 @@ async function arata(text) {
   if (!('Notification' in window) || Notification.permission !== 'granted') { alert('Permite întâi notificările.'); return; }
   const reg = await navigator.serviceWorker.ready;
   await reg.showNotification('Essence', { body: text, icon: 'icon-192.png', badge: 'icon-192.png', tag: 'proba-' + Date.now() });
-  raport.notificareTrimisa = true;
+  raport.notificareTrimisa = true; raport.ora = new Date().toLocaleTimeString('ro-RO');
 }
 $('acum').onclick = () => arata('Asta e o notificare de probă.');
 $('peste').onclick = () => { setTimeout(() => arata('Au trecut 10 secunde.'), 10000); };
