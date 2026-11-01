@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#EEF2F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15232A" media="(prefers-color-scheme: dark)">
+<title>Essence · schelet</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root { --fond: #EEF2F1; --card: #FFFFFF; --cerneala: #1B2A2E; --gri: #5A6B6F; --linie: #D5DEDC;
+  --accent: #2F5F8F; --pe-accent: #FFFFFF; --chihlimbar: #9A6B12; --rosu: #C4453C; --r: 14px; }
+@media (prefers-color-scheme: dark) { :root { --fond: #15232A; --card: #1E2F36; --cerneala: #E8EEED;
+  --gri: #9AAAAD; --linie: #2C3F46; --accent: #7FB0E6; --pe-accent: #10202A; --chihlimbar: #E0B464; --rosu: #F08A80; } }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; background: var(--fond); color: var(--cerneala);
+  font: 17px/1.35 system-ui, -apple-system, sans-serif; }
+body { min-height: 100dvh; padding: env(safe-area-inset-top) 16px calc(96px + env(safe-area-inset-bottom)); }
+button, input { font: inherit; color: inherit; }
+button { border: 0; background: none; padding: 0; cursor: pointer; min-height: 44px; }
+input { width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--linie); border-radius: 12px;
+  background: var(--card); font-size: 17px; }
+input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+h1 { font-size: 28px; font-weight: 700; margin: 16px 0 4px; }
+.antet { display: flex; align-items: center; justify-content: space-between; }
+.stare { color: var(--gri); font-size: 15px; min-height: 22px; margin-bottom: 12px; }
+.stare[data-fel="atentie"] { color: var(--chihlimbar); }
+.grup { background: var(--card); border-radius: var(--r); overflow: hidden; }
+.rand { display: flex; align-items: center; gap: 4px; min-height: 52px; padding: 0 12px 0 4px;
+  border-bottom: 0.5px solid var(--linie); }
+.rand:last-child { border-bottom: 0; }
+.cerc { width: 44px; height: 44px; display: grid; place-items: center; flex: none; }
+.cerc i { width: 22px; height: 22px; border-radius: 50%; border: 1.8px solid var(--gri); display: grid; place-items: center; }
+.rand[data-stare="gata"] .cerc i { background: var(--gri); border-color: var(--gri); }
+.rand[data-stare="gata"] .cerc i::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--card);
+  border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.rand[data-stare="gata"] .titlu { color: var(--gri); }
+.titlu { flex: 1; text-align: left; padding: 8px 0; min-width: 0; overflow-wrap: anywhere; }
+.semn { font-size: 13px; color: var(--gri); flex: none; }
+.netrimis { width: 8px; height: 8px; border-radius: 50%; background: var(--chihlimbar); flex: none; }
+.gol { color: var(--gri); padding: 24px 4px; }
+.jos { position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); }
+.plin { width: 100%; min-height: 50px; border-radius: 25px; background: var(--accent); color: var(--pe-accent);
+  font-weight: 600; }
+.plin:disabled { opacity: .45; }
+.tonal { min-height: 44px; padding: 0 14px; border-radius: 22px; color: var(--accent); font-weight: 600; }
+.distruge { color: var(--rosu); }
+.fundal { position: fixed; inset: 0; background: rgb(0 0 0 / .3); }
+.foaie { position: fixed; left: 0; right: 0; bottom: var(--sub-tastatura, 0px); background: var(--card);
+  border-radius: 20px 20px 0 0; padding: 12px 16px calc(16px + env(safe-area-inset-bottom)); display: grid; gap: 12px;
+  box-shadow: 0 -4px 24px rgb(0 0 0 / .12); }
+.foaie[data-tastatura] { padding-bottom: 16px; }
+.foaie-antet { display: flex; align-items: center; justify-content: space-between; }
+.foaie-antet b { font-size: 17px; }
+.segmente { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--fond); border-radius: 10px; padding: 2px; }
+.segmente button { min-height: 40px; border-radius: 8px; font-size: 15px; }
+.segmente button[aria-pressed="true"] { background: var(--card); font-weight: 600; box-shadow: 0 1px 3px rgb(0 0 0 / .12); }
+.mesaj { position: fixed; left: 16px; right: 16px; bottom: calc(80px + env(safe-area-inset-bottom)); background: var(--cerneala);
+  color: var(--fond); border-radius: 14px; padding: 4px 4px 4px 16px; display: flex; align-items: center; justify-content: space-between; }
+.mesaj button { color: var(--fond); font-weight: 600; padding: 0 12px; }
+.eroare { color: var(--rosu); font-size: 15px; min-height: 20px; }
+.intrare { display: grid; gap: 12px; margin-top: 20vh; }
+.meniu { position: fixed; right: 16px; top: calc(56px + env(safe-area-inset-top)); background: var(--card); border-radius: 14px;
+  min-width: 220px; box-shadow: 0 8px 32px rgb(0 0 0 / .18); overflow: hidden; }
+.meniu button, .meniu div { display: block; width: 100%; text-align: left; padding: 12px 16px; border-bottom: .5px solid var(--linie); }
+.meniu div { color: var(--gri); font-size: 15px; }
+.refuz { background: var(--card); border-radius: var(--r); padding: 12px 16px; margin-bottom: 12px; color: var(--chihlimbar);
+  display: flex; gap: 8px; align-items: center; justify-content: space-between; font-size: 15px; }
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
