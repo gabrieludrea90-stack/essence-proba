@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#EEF2F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14232A" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-title" content="Essence">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>Essence · probă</title>
+<style>
+:root{--fond:#EEF2F1;--card:#fff;--ink:#1B2A2E;--gri:#5A6B6F;--hair:rgba(27,42,46,.14);--acc:#2F5F8F;--ok:#2E7D4F;--atn:#9A6B12;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--fond:#14232A;--card:#1C2D33;--ink:#E8EEEE;--gri:#9AAAAD;--hair:rgba(232,238,238,.16);--acc:#7FB0E6;--ok:#8FD1A8;--atn:#E0B464}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fond);color:var(--ink);font:17px/1.35 system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+main{padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 120px);max-width:560px;margin:0 auto}
+h1{font-size:28px;margin:8px 0 4px}
+.sub{color:var(--gri);font-size:15px;margin:0 0 20px}
+section{background:var(--card);border-radius:26px;padding:16px;margin:0 0 20px}
+h2{font-size:17px;margin:0 0 8px}
+p{margin:6px 0}
+.rand{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:.5px solid var(--hair);font-size:15px}
+.rand:first-of-type{border-top:0}
+.rand span:last-child{color:var(--gri);text-align:right;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)!important}.atn{color:var(--atn)!important}
+button,a.buton{display:block;width:100%;min-height:50px;margin:10px 0 0;border:0;border-radius:25px;background:var(--acc);color:#fff;font:600 17px system-ui,sans-serif;text-align:center;text-decoration:none;line-height:50px;padding:0 16px;cursor:pointer}
+button.secundar{background:transparent;color:var(--acc);border:1.5px solid var(--acc)}
+.nota{color:var(--gri);font-size:15px}
+ol{padding-left:20px;margin:6px 0;font-size:15px}
+#bara{position:fixed;left:0;right:0;bottom:0;display:none;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:.5px solid var(--hair);transition:transform .2s ease;z-index:5}
+#bara.deschisa{display:flex}
+#bara input{flex:1;min-height:44px;border-radius:22px;border:1px solid var(--hair);background:var(--fond);color:var(--ink);font-size:17px;padding:0 16px}
+#bara button{width:auto;margin:0;min-height:44px;line-height:44px}
+#jurnal{font:13px/1.4 ui-monospace,monospace;color:var(--gri);white-space:pre-wrap;max-height:140px;overflow:auto;margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Essence · probă</h1>
+  <p class="sub" id="mod">Se verifică…</p>
+
+  <section id="instalare" hidden>
+    <h2>Instalează pe ecranul principal</h2>
+    <div id="pasi-ios" hidden><ol><li>Atinge butonul de partajare din Safari (pătratul cu săgeată).</li><li>Alege „Adaugă pe ecranul principal”, apoi „Adaugă”.</li><li>Deschide Essence de pe ecranul principal, nu din Safari.</li></ol></div>
+    <div id="pasi-android" hidden><ol><li>Atinge „Instalează” mai jos sau meniul ⋮ din Chrome › „Adaugă pe ecranul de pornire” › „Instalează”.</li><li>Deschide Essence de pe ecranul principal.</li></ol><button id="instaleaza" hidden>Instalează</button></div>
+  </section>
+
+  <section>
+    <h2>1 · Ecranul</h2>
+    <div id="ecran"></div>
+  </section>
+
+  <section>
+    <h2>2 · Tastatura</h2>
+    <p class="nota">Deschide câmpul de jos și scrie ceva. Bara trebuie să stea lipită deasupra tastaturii, fără să sară.</p>
+    <button id="tastatura">Deschide câmpul de jos</button>
+    <div id="tast"></div>
+    <div id="jurnal"></div>
+  </section>
+
+  <section>
+    <h2>3 · Datele rămân pe telefon</h2>
+    <div id="date"></div>
+    <button class="secundar" id="pastreaza">Cere păstrarea datelor</button>
+  </section>
+
+  <section>
+    <h2>4 · Fără rețea</h2>
+    <div id="retea"></div>
+    <p class="nota">Proba: după prima deschidere, pune telefonul în modul avion, închide Essence de tot și redeschide-o. Trebuie să se deschidă normal, cu galeria cu tot.</p>
+  </section>
+
+  <section>
+    <h2>5 · Notificări</h2>
+    <div id="notif"></div>
+    <button id="permite">Permite notificările</button>
+    <button class="secundar" id="acum">Trimite o notificare acum</button>
+    <button class="secundar" id="peste">Notificare peste 10 secunde</button>
+    <p class="nota">Pentru „peste 10 secunde”, ieși pe ecranul principal după ce atingi și vezi dacă ajunge. Dacă nu ajunge cu aplicația în fundal, asta e chiar lecția probei: alertele la o oră anume, cu aplicația închisă, cer serverul. Sunt pasul următor.</p>
+  </section>
+
+  <section>
+    <h2>6 · Piesele reale</h2>
+    <p class="nota">Galeria cărămizilor Essence, aceeași ca pe claude.ai, rulată aici ca aplicație: foaia lucrului, Notează, meniurile.</p>
+    <a class="buton" href="galerie.html">Deschide galeria</a>
+  </section>
+
+  <section>
+    <h2>Raportul</h2>
+    <p class="nota">După probe, copiază raportul și trimite-l în conversație.</p>
+    <button id="copiaza">Copiază raportul</button>
+  </section>
+</main>
+
+<div id="bara"><input id="camp" type="text" enterkeyhint="done" placeholder="Scrie aici" autocomplete="off"><button id="gata">Gata</button></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const raport = {};
+const nr = (v) => (Math.round(v * 10) / 10).toString();
+function randuri(tinta, perechi) {
+  tinta.innerHTML = '';
+  for (const [eticheta, valoare, clasa] of perechi) {
+    const r = document.createElement('div'); r.className = 'rand';
+    const a = document.createElement('span'); a.textContent = eticheta;
+    const b = document.createElement('span'); b.textContent = valoare; if (clasa) b.className = clasa;
+    r.append(a, b); tinta.append(r);
+  }
+}
+const ua = navigator.userAgent;
+const eIos = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const eAndroid = /Android/.test(ua);
+const instalata = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+raport.instalata = instalata;
+raport.sistem = eIos ? 'iOS/iPadOS' : eAndroid ? 'Android' : 'altul';
+raport.browser = ua;
+$('mod').textContent = instalata ? 'Deschisă ca aplicație, pe ecran întreg.' : 'Deschisă în browser. Pentru probă, instaleaz-o întâi.';
+$('mod').className = 'sub ' + (instalata ? 'ok' : 'atn');
+if (!instalata) { $('instalare').hidden = false; $(eIos ? 'pasi-ios' : 'pasi-android').hidden = false; }
+let cerereInstalare = null;
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); cerereInstalare = e; $('instaleaza').hidden = false; });
+$('instaleaza').onclick = async () => { if (!cerereInstalare) return; cerereInstalare.prompt(); await cerereInstalare.userChoice; cerereInstalare = null; };
+
+function marginiSigure() {
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';
+  document.body.append(d); const s = getComputedStyle(d);
+  const m = [s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft].map((x) => parseFloat(x));
+  d.remove(); return m;
+}
+function ecran() {
+  const m = marginiSigure();
+  const p = matchMedia('(pointer: coarse)').matches ? 'deget' : matchMedia('(pointer: fine)').matches ? 'mouse' : 'niciunul';
+  const ap = matchMedia('(any-pointer: fine)').matches ? 'și mouse/creion' : '';
+  Object.assign(raport, { latime: innerWidth, inaltime: innerHeight, ecran: screen.width + '×' + screen.height, dpr: devicePixelRatio, margini: m.join('/'), atingere: p + (ap ? ' ' + ap : '') });
+  randuri($('ecran'), [
+    ['Lățimea × înălțimea paginii', innerWidth + ' × ' + innerHeight],
+    ['Ecranul', screen.width + ' × ' + screen.height + ' · ×' + nr(devicePixelRatio)],
+    ['Marginile sigure (sus/dr/jos/st)', m.join(' / ')],
+    ['Atingerea', p + (ap ? ' ' + ap : '')],
+    ['Orientarea', (screen.orientation && screen.orientation.type) || (innerWidth > innerHeight ? 'culcat' : 'în picioare')],
+  ]);
+}
+ecran(); addEventListener('resize', ecran);
+
+const vv = window.visualViewport;
+let inaltimeInitiala = innerHeight, tastMax = 0, jurnal = [];
+function tastatura() {
+  const kbVizual = vv ? Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) : 0;
+  const kbRedim = Math.max(0, inaltimeInitiala - innerHeight);
+  const kb = Math.max(kbVizual, kbRedim);
+  tastMax = Math.max(tastMax, kb);
+  if ($('bara').classList.contains('deschisa')) $('bara').style.transform = kbVizual ? `translateY(${-kbVizual}px)` : '';
+  Object.assign(raport, { tastaturaMax: tastMax, felTastatura: kbRedim > 0 ? 'pagina se micșorează' : kbVizual > 0 ? 'vederea se micșorează' : 'nevăzută de pagină' });
+  randuri($('tast'), [
+    ['Tastatura văzută de pagină', kb ? kb + ' px' : '—', kb ? 'ok' : ''],
+    ['Cea mai înaltă măsurată', tastMax ? tastMax + ' px' : '—'],
+    ['Cum o vede pagina', raport.felTastatura],
+  ]);
+  if (document.activeElement === $('camp')) {
+    jurnal.unshift(`${new Date().toLocaleTimeString('ro-RO')}  pagină ${innerHeight}  vedere ${vv ? Math.round(vv.height) : '?'}  deplasare ${vv ? Math.round(vv.offsetTop) : '?'}  tastatură ${kb}`);
+    jurnal = jurnal.slice(0, 12); $('jurnal').textContent = jurnal.join('\n');
+  }
+}
+if (vv) { vv.addEventListener('resize', tastatura); vv.addEventListener('scroll', tastatura); }
+addEventListener('resize', tastatura); tastatura();
+$('tastatura').onclick = () => { inaltimeInitiala = innerHeight; $('bara').classList.add('deschisa'); $('camp').focus(); };
+$('gata').onpointerdown = (e) => e.preventDefault();
+$('gata').onclick = () => { $('camp').blur(); $('bara').classList.remove('deschisa'); $('bara').style.transform = ''; };
+
+function deschideBaza() {
+  return new Promise((ok, nu) => {
+    const r = indexedDB.open('essence-proba', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('k');
+    r.onsuccess = () => ok(r.result); r.onerror = () => nu(r.error);
+  });
+}
+async function date() {
+  let deschideri = '—', persistent = '—', spatiu = '—';
+  try {
+    const db = await deschideBaza();
+    const v = await new Promise((ok) => { const t = db.transaction('k', 'readwrite'); const s = t.objectStore('k'); const g = s.get('deschideri'); g.onsuccess = () => { const n = (g.result || 0) + 1; s.put(n, 'deschideri'); ok(n); }; });
+    deschideri = String(v);
+  } catch (e) { deschideri = 'eroare: ' + e.message; }
+  try { persistent = navigator.storage && navigator.storage.persisted ? ((await navigator.storage.persisted()) ? 'da' : 'nu încă') : 'necunoscut'; } catch { /* nimic */ }
+  try { if (navigator.storage && navigator.storage.estimate) { const e = await navigator.storage.estimate(); spatiu = Math.round((e.quota || 0) / 1048576) + ' MB'; } } catch { /* nimic */ }
+  Object.assign(raport, { deschideri, persistent, spatiu });
+  randuri($('date'), [
+    ['De câte ori ai deschis-o', deschideri],
+    ['Datele sunt păstrate la nevoie de spațiu', persistent, persistent === 'da' ? 'ok' : ''],
+    ['Spațiu disponibil', spatiu],
+  ]);
+}
+date();
+$('pastreaza').onclick = async () => { try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch { /* nimic */ } date(); };
+
+function retea() {
+  const sw = 'serviceWorker' in navigator;
+  const control = sw && !!navigator.serviceWorker.controller;
+  Object.assign(raport, { offlinePregatit: control, online: navigator.onLine });
+  randuri($('retea'), [
+    ['Rețeaua acum', navigator.onLine ? 'conectat' : 'fără rețea'],
+    ['Pregătită pentru lucru fără rețea', control ? 'da' : sw ? 'la următoarea deschidere' : 'nu se poate', control ? 'ok' : ''],
+  ]);
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then(retea).catch(retea);
+  navigator.serviceWorker.addEventListener('controllerchange', retea);
+}
+addEventListener('online', retea); addEventListener('offline', retea); retea();
+
+function notif() {
+  const are = 'Notification' in window;
+  const stare = are ? Notification.permission : 'nu există aici';
+  raport.notificari = stare;
+  randuri($('notif'), [
+    ['Notificările', stare === 'granted' ? 'permise' : stare === 'denied' ? 'refuzate' : stare === 'default' ? 'încă neîntrebat' : stare, stare === 'granted' ? 'ok' : ''],
+    ['Notificări trimise de server (push)', 'PushManager' in window ? 'posibile' : 'nu în acest mod'],
+  ]);
+}
+notif();
+$('permite').onclick = async () => { if ('Notification' in window) { await Notification.requestPermission(); } notif(); };
+async function arata(text) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') { alert('Permite întâi notificările.'); return; }
+  const reg = await navigator.serviceWorker.ready;
+  await reg.showNotification('Essence', { body: text, icon: 'icon-192.png', badge: 'icon-192.png', tag: 'proba-' + Date.now() });
+  raport.notificareTrimisa = true;
+}
+$('acum').onclick = () => arata('Asta e o notificare de probă.');
+$('peste').onclick = () => { setTimeout(() => arata('Au trecut 10 secunde.'), 10000); };
+
+$('copiaza').onclick = async () => {
+  ecran(); tastatura();
+  const text = 'Raport Essence · probă\n' + Object.entries(raport).map(([k, v]) => k + ': ' + v).join('\n');
+  try { await navigator.clipboard.writeText(text); $('copiaza').textContent = 'Copiat'; }
+  catch { prompt('Copiază textul:', text); }
+  setTimeout(() => { $('copiaza').textContent = 'Copiază raportul'; }, 2000);
+};
+</script>
+</body>
+</html>
