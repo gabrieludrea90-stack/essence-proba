@@ -1,6 +1,6 @@
 /* Essence · schelet: pornirea fără rețea. Pagina și scriptul din cache, actualizate în fundal;
    datele nu trec pe aici (le ține pagina, iar serverul e întrebat direct). */
-const CACHE = 'essence-schelet-v2';
+const CACHE = 'essence-schelet-v3';
 const SHELL = ['./', 'index.html', 'app.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys()
