@@ -1,6 +1,6 @@
 /* Essence · schelet: pornirea fără rețea. Pagina și scriptul din cache, actualizate în fundal;
    datele nu trec pe aici (le ține pagina, iar serverul e întrebat direct). */
-const CACHE = 'essence-schelet-v3';
+const CACHE = 'essence-schelet-v4';
 const SHELL = ['./', 'index.html', 'app.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys()
@@ -21,9 +21,13 @@ self.addEventListener('push', (e) => {
   let m = {};
   try { m = e.data?.json() ?? {}; } catch { /* mesaj fără JSON */ }
   const n = m.notification ?? {};
-  e.waitUntil(self.registration.showNotification(n.title || 'Essence', {
+  const arata = self.registration.showNotification(n.title || 'Essence', {
     body: n.body || '', tag: n.tag, data: { navigate: n.navigate, lucru: n.data?.lucru ?? n.tag },
-    icon: 'icon-192.png', badge: 'icon-192.png' }));
+    icon: 'icon-192.png', badge: 'icon-192.png' });
+  // Întâi notificarea; ora sosirii e doar o măsurătoare, iar o eroare a ei nu atinge alerta (lot-1a).
+  e.waitUntil(arata.then(() => (n.data?.sosit_la ? fetch(n.data.sosit_la, {
+    method: 'POST', mode: 'no-cors', body: JSON.stringify({ sosit: n.data.sosit }), signal: AbortSignal.timeout(5000),
+  }) : null)).catch(() => {}));
 });
 
 // Atinsă: fereastra deschisă vine în față și primește lucrul; altfel se deschide aplicația pe el.
