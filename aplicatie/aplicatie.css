@@ -201,9 +201,12 @@ html, body { background: var(--bg); color: var(--ink); }
 /* Essence · baza: resetul și textul de bază. Fără clase; componentele și ecranele vin după, în straturile lor. */
 @layer baza {
   *, *::before, *::after { box-sizing: border-box; }
-  html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+  /* Pagina nu mai trage peste margini sus și jos (Gabriel, 8 nov, 18:54: se vedea fondul de dedesubt, ca o bandă neagră);
+     ce derulează înăuntru (foile, listele) își ține derularea cu `overscroll-behavior: contain`. */
+  html { background: var(--bg); -webkit-text-size-adjust: 100%; overscroll-behavior-y: none; }
   body {
     margin: 0;
+    overscroll-behavior-y: none;
     background: var(--bg);
     color: var(--ink);
     font: 400 var(--t-17) / var(--lh-17) var(--f-body);
@@ -2205,8 +2208,6 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-plus-n { position: absolute; right: var(--s-4); top: 0; height: var(--tap); min-width: var(--tap); margin: 0; padding: 0;
     border: 0; background: none; font: 600 var(--t-15) var(--f-body); color: var(--accent); text-align: right; }
   .k-z-plus-n:active { transform: none; opacity: .6; }
-  .k-z-ad .k-z-c { align-items: center; min-height: 52px; padding: var(--s-2) var(--s-4); color: var(--muted); }
-  .k-z-plus .k-z-s { color: var(--muted); }
 
   /* ——— rândul: [ora 40] [semn 22] [text] [dreapta] ——— */
   .k-rand.k-z-r { display: block; min-height: 0; padding: 0; background: var(--surface); }
