@@ -1094,13 +1094,26 @@ html, body { background: var(--bg); color: var(--ink); }
     margin: 0;
   }
   .sc-ecran .sc-sync-r > [data-z] { min-width: 0; display: flex; }
-  /* cu ceva de spus (nu se poate citi, nesalvat, versiune nouă), rândul coboară sub titlu, pe toată lățimea: pe
-     rândul antetului s-ar suprapune peste titlurile mari și peste capsulele Agendei  */
+  /* cu ceva de spus (fără internet, serverul nu răspunde, nesalvat, versiune nouă) rândul devine pilula de jos (P6.11,
+     `stari_offline`, `stari_sincron`): fixă deasupra barei, 16 de margini, 44 înălțime (butonul Reîncearcă e țintă); pe
+     rândul antetului s-ar suprapune peste titlurile mari și peste capsulele Agendei */
   /* „Se salvează” și „Datele se încarcă greu” sunt trecătoare: rămân pe rândul antetului, peste nimic, fără să mute
      ecranul  */
   .sc-ecran .sc-sync-r:has(.sc-sync > [data-s]:not([data-s="se-salveaza"], [data-s="incet"])) {
-    position: static; max-width: none; height: auto; margin-top: var(--s-2);
+    position: fixed; z-index: 19; max-width: none; height: auto; margin: 0; top: auto;
+    left: max(var(--s-4), calc(50% - 264px)); right: max(var(--s-4), calc(50% - 264px));
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    border-radius: var(--r-md); background: var(--bg); box-shadow: var(--sh-2), 0 0 0 .5px var(--line);
+    padding: 0 var(--s-3);
   }
+  .sc-ecran .sc-sync-r:has(.sc-sync > :is([data-s="fara-raspuns"], [data-s="nesalvat"], [data-s="versiune-noua"],
+    [data-s="document-mare"]):not([data-s="se-salveaza"], [data-s="incet"])) {
+    background: var(--chihlimbar-fond);
+  }
+  .sc-ecran .sc-sync-r:has(.sc-sync > [data-s]:not([data-s="se-salveaza"], [data-s="incet"])) .sc-sync { font: 400 var(--t-14) / var(--lh-14) var(--f-body); }
+  .sc-sync > [data-s] b { font-weight: 500; }
+  .sc-sync-r:has(.sc-sync > [data-s]:not([data-s="se-salveaza"], [data-s="incet"])) .sc-sync { flex: 1; }
+  .sc-sync-r:has(.sc-sync > [data-s]:not([data-s="se-salveaza"], [data-s="incet"])) .sc-sync > [data-s] { gap: var(--s-2) 10px; }
   /* gol, locul lui nu prinde atingerile (un buton cu text din antet, „Așază tot”, trece pe sub el) */
   .sc-ecran .sc-sync-r:not(:has(.sc-sync > *)) { pointer-events: none; }
   .sc-ecran .sc-sync-r + * { margin-top: var(--s-4); }
@@ -1123,10 +1136,12 @@ html, body { background: var(--bg); color: var(--ink); }
   .sc-sync > [data-s] { display: flex; align-items: center; gap: 6px; min-width: 0; }
   .sc-sync > [data-s] > svg { flex: none; }
   .sc-sync > [data-s] > span { min-width: 0; overflow-wrap: break-word; } /* niciun text tăiat */
-  .sc-sync > :is([data-s="nesalvat"], [data-s="necitit"]) { color: var(--ink2); }
-  .sc-sync > :is([data-s="nesalvat"], [data-s="necitit"]) > svg { color: var(--mid-fg); }
+  .sc-sync > :is([data-s="nesalvat"], [data-s="necitit"], [data-s="fara-retea"], [data-s="fara-raspuns"], [data-s="versiune-noua"], [data-s="document-mare"]) { color: var(--ink2); }
+  .sc-sync > :is([data-s="nesalvat"], [data-s="necitit"], [data-s="fara-retea"]) > svg { color: var(--muted); }
+  .sc-sync > :is([data-s="fara-raspuns"], [data-s="versiune-noua"], [data-s="document-mare"]) > svg { color: var(--chihlimbar); }
   /* „Încearcă din nou”: buton text de 44, pe rândul antetului */
   .sc-sync > button { flex: none; font-size: var(--t-sec); }
+  .sc-sync-r:has(.sc-sync > [data-s]:not([data-s="se-salveaza"], [data-s="incet"])) .sc-sync > button { margin: 0 -4px 0 auto; font-weight: 500; font-size: var(--t-14); line-height: var(--lh-14); }
 
   /* bara de jos: fixă, pe fundalul cardurilor, linie fină sus; fila deschisă în accent */
   .sc-bara {
@@ -2672,7 +2687,7 @@ html, body { background: var(--bg); color: var(--ink); }
   }
   .k-fl-cap.fara-semn { grid-template-columns: 1fr; }
   /* în foaia întreagă (fără șir), capul e despărțit de primul grup ca grupurile între ele (Gabriel, 30 oct, 21:57) */
-  .k-fl.intreg > .k-fl-cap { margin-bottom: var(--s-5); }
+  .k-fl.intreg > .k-fl-cap { margin-bottom: var(--s-3); }
   .k-fl-cap .k-fl-cerc { width: var(--tap); height: var(--tap); margin: -9px -8px -9px -8px; }
   .k-fl-cerc .k-cerc-i { width: 26px; height: 26px; border-width: 2px; }
   .k-fl-cerc .k-cerc-i .ui-i { width: 14px; height: 14px; }
@@ -2695,7 +2710,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-t { flex: 0 1 auto; width: auto; max-width: 100%; font: 600 var(--t-20) / var(--lh-20) var(--f-body); }
   @supports not (field-sizing: content) { .k-fl-t { flex: 1 1 auto; } }
   /* Detaliile la 17, nu 15: sub 16 px iPhone-ul mărește pagina la atingerea câmpului (30 oct, 21:13) */
-  .k-fl-d { margin-top: 2px; color: var(--muted); font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-fl-d { margin-top: 2px; min-height: var(--s-6); color: var(--muted); font: 400 var(--t-16) / var(--lh-16) var(--f-body); }
   .k-fl-t::placeholder, .k-fl-d::placeholder, .k-fl-tf::placeholder { color: var(--faint); }
   .k-fl-steag { flex: none; padding-top: 3px; color: var(--chihlimbar); }
   .k-fl-steag svg { fill: currentColor; }
@@ -2739,8 +2754,8 @@ html, body { background: var(--bg); color: var(--ink); }
 
   /* grupurile: card alb cu raza grupurilor (26, ca în iOS 26), 20 între ele; titlul 17/600 gri deasupra, aliniat cu
      textul din card; nota 13 dedesubt (revizia 5u) */
-  .k-fl-g { margin-bottom: var(--s-5); }
-  .k-fl-sec { padding: 0 var(--s-4) var(--s-2); color: var(--muted); font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-fl-g { margin-bottom: 14px; }   /* între carduri: 14, ca în desen (fl_e-*), nu 20 */
+  .k-fl-sec { padding: 0 var(--s-4) var(--s-2); color: var(--muted); font: 600 var(--t-13) / var(--lh-13) var(--f-body); }
   .k-fl-card { overflow: hidden; border-radius: var(--r-lg); background: var(--k-grup); container-type: inline-size; }
   .k-fl-nota { padding: 6px var(--s-4) var(--s-1); color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
 
@@ -2756,7 +2771,7 @@ html, body { background: var(--bg); color: var(--ink); }
     padding: 0 var(--s-4);
     text-align: left;
     color: var(--ink);
-    font: 400 var(--t-17) / var(--lh-17) var(--f-body);
+    font: 400 var(--t-16) / var(--lh-16) var(--f-body);
   }
   .k-fl-r.cu-sub { min-height: 56px; padding-block: 7px; }
   .k-fl-r + .k-fl-r::before {
@@ -2869,7 +2884,7 @@ html, body { background: var(--bg); color: var(--ink); }
     color: var(--ink);
     resize: none;
     field-sizing: content;
-    font: 400 var(--t-17) / var(--lh-17) var(--f-body);
+    font: 400 var(--t-16) / var(--lh-16) var(--f-body);
   }
   /* titlul și Detaliile pasului, unul sub altul (fl_x-*): Detaliile se văd cât au text sau cât rândul e în focus */
   .k-pas-t { display: block; min-width: 0; padding-bottom: 13px; }
@@ -2886,7 +2901,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-r.nou-pas .k-fl-tf, .k-fl-r.nou-rand .k-fl-tf { align-self: stretch; padding: 0; min-height: 52px; }
 
   /* paginile: textul pe tot rândul, „Elimină” centrat în roșul blând */
-  .k-fl-tf { padding: 14px var(--s-4); min-height: 52px; font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-fl-tf { padding: 14px var(--s-4); min-height: 52px; font: 400 var(--t-16) / var(--lh-16) var(--f-body); }
   /* cardul locului (pagina Unde): „Schimbă” în accent, la capăt; rândul din lista locurilor, fără valoare */
   .k-fl.pagina .k-fl-r.loc { grid-template-columns: 20px minmax(0, 1fr) auto; }
   .k-fl-schimba { min-height: var(--tap); margin-right: -6px; padding: 0 6px; color: var(--accent); font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
@@ -2903,7 +2918,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-g.lipit .k-fl-card { border-top-left-radius: 0; border-top-right-radius: 0; }
   .k-fl-g.lipit .k-fl-r.nou-rand::before { content: ""; position: absolute; top: 0; left: 46px; right: 0; height: 1px;
     transform: scaleY(.5); transform-origin: top; background: var(--hair); }
-  .k-fl-scoate { width: 100%; min-height: 52px; color: var(--rosu-text); font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-fl-scoate { width: 100%; min-height: 52px; color: var(--rosu-text); font: 400 var(--t-16) / var(--lh-16) var(--f-body); }
 
 }
 
@@ -2935,8 +2950,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-rz-meniu { left: var(--rz-x, 0px); top: calc(100% - 4px); bottom: auto; right: auto;
     max-height: calc(7 * 44px); }
   .k-rz-meniu.k-rz-mai { left: auto; right: var(--s-4); top: auto; bottom: -52px; }
-  /* ⋯ al foii unice: sub antet, cu marginea dreaptă la 16 (fl_e-puncte); fără strat, ca să bată regula de mai sus */
-  .k-ex-ancora .k-rz-meniu.k-rz-mai { top: 0; bottom: auto; right: var(--s-4); width: 290px; max-width: calc(100% - 2 * var(--s-4)); }
+  /* ⋯ al foii unice: sub antet, cu marginea dreaptă la 16 de marginea ecranului (fl_e-puncte); ancora stă deja în chenarul de 16 al foii, deci `right: 0`; fără strat, ca să bată regula de mai sus */
+  .k-ex-ancora .k-rz-meniu.k-rz-mai { top: 0; bottom: auto; right: 0; width: 290px; max-width: 100%; }
   .k-ex-ancora .k-nt-mr small { max-width: 150px; white-space: nowrap; }
   .k-ex-ancora .k-nt-mr > span:first-child { max-width: none; white-space: nowrap; }
   .k-ex .k-fl-r.act { grid-template-columns: 20px auto minmax(0, 1fr); }
@@ -2952,7 +2967,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ex-meniu .k-nt-mr.grup, .k-rz-meniu .k-nt-mr.grup { margin-top: 8px; }
   .k-ex-meniu .k-nt-mr.grup::before, .k-rz-meniu .k-nt-mr.grup::before { top: -8px; left: 0; height: 8px; background: var(--k-grup); transform: none; }
   .k-fl-t, .k-fl-d { caret-color: var(--accent); }
-  .k-rz-tog { display: grid; grid-template-columns: 24px 1fr auto; column-gap: 10px; align-items: center; width: 100%; min-height: 52px;
+  .k-rz-tog { display: grid; grid-template-columns: 24px 1fr auto; column-gap: 10px; align-items: center; width: 100%; min-height: var(--tap);
     padding: 0 var(--s-4) 0 var(--s-3); text-align: left; color: var(--ink); font: 400 var(--t-16) / normal var(--f-body); }
   .k-rz-tog > :first-child { display: grid; place-items: center; color: var(--muted); }
   .k-rz-tt { min-width: 0; white-space: nowrap; overflow: hidden; font-size: var(--t-15); }
@@ -3346,6 +3361,11 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-iv-e { display: block; margin: 0 0 6px; font: 400 var(--t-15) / 21px var(--f-body); color: var(--muted); }
   .k-iv-e .k-cd-camp { margin-top: 6px; }
   .k-inv { position: fixed; inset: 0; z-index: 30; overflow: auto; background: var(--surface); padding-top: 265px; }
+  /* instalarea (P6.11, `stari_instaleaza`): același card, mai sus; pașii 15 / 400 în `--ink`, cu iconița Partajează de 16 în rând */
+  .k-inv.inst { padding-top: 184px; }
+  .k-cd-pas { margin: 0 0 6px; font: 400 var(--t-15) / 21px var(--f-body); color: var(--ink); }
+  .k-cd-pas + .k-cd-pas { margin-bottom: 14px; }
+  .k-cd-ic { display: inline-flex; vertical-align: -3px; }
 }
 
 /* Foaia lucrului pe Zag Drawer (blocul 0c-1; proba 0a): mișcarea o dă transformul pus de Zag
