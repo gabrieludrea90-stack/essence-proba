@@ -2296,10 +2296,6 @@ html, body { background: var(--bg); color: var(--ink); }
   /* mâine, seara */
   .k-z-band { margin: 0; padding: var(--s-2) var(--s-4); background: var(--bg); color: var(--muted); font-size: var(--t-15);
     line-height: var(--lh-15); font-weight: 600; }
-  .k-z-retea { display: flex; align-items: center; gap: var(--s-2); min-height: var(--tap); padding-inline: var(--s-4);
-    border-bottom: 1px solid var(--line); color: var(--muted); font-size: var(--t-14); line-height: var(--lh-14); }
-  .k-z-retea p { margin: 0; }
-  .k-z-retea .ui-i { flex: none; color: var(--chihlimbar); }
   .k-z-sus { margin-bottom: var(--s-2); padding-inline: var(--s-4); }
 
   /* telefon îngust (sub 360): rândul pe două linii; pastila fără Caută */
