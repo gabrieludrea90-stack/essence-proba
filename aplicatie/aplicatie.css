@@ -3028,8 +3028,11 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-nt-in::placeholder { color: transparent; -webkit-text-fill-color: transparent; }
   .k-nt-ph { color: var(--faint); }
   .k-nt-bule { display: flex; align-items: center; gap: var(--s-2); padding: 8px var(--s-4) 4px; }
-  .k-nt-sir { display: flex; flex: 1; min-width: 0; gap: var(--s-2); overflow-x: auto; scrollbar-width: none; }
-  .k-nt-feluri { overflow-x: auto; scrollbar-width: none; }
+  /* Șirurile de bule derulează doar pe orizontală (Gabriel, 8 nov, 18:31: se mișcau și sus-jos): zona de atingere a bulei
+     (`::after`, 5 px peste și sub) încape în spațiul de 5 px al șirului; sus-jos nu mai e nimic de derulat. */
+  .k-nt-sir, .k-nt-feluri { overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; touch-action: pan-x;
+    scrollbar-width: none; }
+  .k-nt-sir { display: flex; flex: 1; min-width: 0; gap: var(--s-2); padding-block: 5px; margin-block: -5px; }
   .k-nt-sir::-webkit-scrollbar, .k-nt-feluri::-webkit-scrollbar { display: none; }
   .k-nt-b.ok { width: 34px; padding: 0; justify-content: center; background: var(--surface); color: var(--faint); }
   .k-nt-b.ok[aria-disabled="false"] { background: var(--accent); color: var(--accent-ink); }
