@@ -2242,6 +2242,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-fara > .k-cerc { top: calc(var(--s-2) + (var(--lh-16) - var(--tap)) / 2); }
   .k-r + .k-r > .k-z-fara::before { content: ""; position: absolute; top: 0; left: 50px; right: var(--s-4); height: 1px;
     background: var(--hair); transform: scaleY(.5); }
+  /* Mâine seara: între lucrurile fără oră și cele cu oră, o linie pe toată lățimea textului, ca trecerea să nu pară un gol
+     (Gabriel, 8 nov, 19:41). */
+  .k-z-m .k-r:has(> .k-z-fara) + .k-r > .k-z-r:not(.k-z-fara)::before { content: ""; position: absolute; top: 0;
+    left: var(--s-4); right: var(--s-4); height: 1px; background: var(--hair); transform: scaleY(.5); }
 
   /* semnele */
   .k-z-sg { display: block; margin-top: -.5px; color: var(--cerc-contur); }
