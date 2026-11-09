@@ -2537,16 +2537,14 @@ html, body { background: var(--bg); color: var(--ink); }
    (desenul `saptamana.mjs`); clasele k-an-* (grila), k-al-* (lista). */
 @layer componente {
   .k-an { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 12px; padding: var(--s-3) var(--s-4) var(--s-4); background: var(--surface); }
-  .k-an-n { margin: 0 0 var(--s-1); font: 600 var(--t-13) / var(--lh-12) var(--f-body); color: var(--ink); }
-  .k-an-nb { position: relative; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; font: inherit; color: inherit; text-align: left; }
-  .k-an-nb:active { transform: none; opacity: .6; }
-  .k-an-nb::before { content: ""; position: absolute; inset: -6px -4px -2px; }   /* ținta titlului lunii, mai mare decât litera */
+  /* toată luna mică e ținta (9 nov, hotărârea 8) */
+  .k-an-mb { display: block; width: 100%; margin: 0; padding: 0; border: 0; border-radius: var(--r-sm); background: none; font: inherit; color: inherit; text-align: left; }
+  .k-an-mb:active { transform: none; opacity: .6; }
+  .k-an-n { display: block; margin: 0 0 var(--s-1); font: 600 var(--t-13) / var(--lh-12) var(--f-body); color: var(--ink); }
   .k-an-cur { color: var(--accent); }
   .k-an-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 1px; }
   .k-an-z { position: relative; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; font-size: 11px; line-height: 14px; text-align: center;
     color: var(--ink2); font-variant-numeric: tabular-nums; }
-  .k-an-z:active { transform: none; }
-  .k-an-z::before { content: ""; position: absolute; inset: -4px -2px; }   /* ținta de atingere, mai mare decât cifra */
   .k-an-azi { background: var(--accent); color: var(--accent-ink); border-radius: 50%; font-weight: 700; }
   .k-an-pt::after { content: ""; position: absolute; left: 50%; bottom: -1px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: var(--muted); }
 
@@ -2654,10 +2652,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-h::before {
     content: "";
     position: absolute;
-    inset: 0 0 calc(-1 * var(--s-4));
+    inset: 0;   /* doar sub antet: nu mai trece peste titlu când foaia stă sus (Gabriel, 8 nov, 20:08: titlul părea stins) */
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(var(--k-fond) 62%, transparent);
+    background: linear-gradient(var(--k-fond) 70%, transparent);
   }
   .k-fl-tt { text-align: center; font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
   .k-fl-b {
@@ -2910,6 +2908,9 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-r.nou-rand.cauta .k-fl-ic { color: var(--muted); }
   /* Participanți și Etichetă (fl_p-*): rânduri cu iconiță, ca restul foii; „Etichetă nouă” în accent */
   .k-fl.pagina .k-fl-r.bifa.cu-ic { grid-template-columns: 20px minmax(0, 1fr) 24px; }
+  /* fără iconiță (zilele din „Personalizat”): numele cât rândul, bifa la capăt (turul foii, 9 nov) */
+  .k-fl.pagina .k-fl-r.bifa:not(:has(> .k-fl-ic)) { grid-template-columns: minmax(0, 1fr) 24px; }
+  .k-fl.pagina .k-fl-r.bifa:not(:has(> .k-fl-ic)) + .k-fl-r.bifa::before { left: 14px; }
   .k-fl.pagina .k-fl-r.bifa.cu-ic + .k-fl-r.bifa.cu-ic::before { left: 46px; }
   .k-fl-r.nou-rand:not(.cauta) .k-fl-tf::placeholder, .k-fl-r.nou-pas .k-fl-tf::placeholder { color: var(--accent); }
   /* rândul „Etichetă nouă” continuă cardul listei de deasupra, cu linia dintre ele */
@@ -2957,11 +2958,16 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ex-ancora .k-nt-mr > span:first-child { max-width: none; white-space: nowrap; }
   .k-ex .k-fl-r.act { grid-template-columns: 20px auto minmax(0, 1fr); }
   /* capul foii nu e card (desenul): semnul pe axa de 40, titlul și Detaliile pe axa de 62; bara programării cât capul */
-  .k-ex > .k-fl-cap { background: none; padding: 0 0 var(--s-2); margin-left: 4px; grid-template-columns: 40px 1fr; column-gap: 2px; }
+  /* titlul coboară 8 px sub butoane: cercul, pe axa lui ×, nu se mai lipește de el (Gabriel, 8 nov, 20:21) */
+  .k-ex > .k-fl-cap { background: none; padding: 0 0 14px; margin: 8px 0 0 4px; grid-template-columns: 40px 1fr; column-gap: 2px; }
+  /* cercul titlului pe axa iconițelor din carduri (centrul la 20 px în coloana de 40; Gabriel, 8 nov, 20:08) */
+  .k-ex > .k-fl-cap .k-fl-cerc { justify-self: center; margin: -9px -2px; }
   .k-ex .k-fl-cap .k-z-bara { align-self: stretch; height: auto; margin: 4px 0; justify-self: center; }
   .k-ex .k-fl-semn { display: grid; padding-top: 0; }
   .k-ex-meniu .k-nt-mr small, .k-rz-meniu .k-nt-mr small { margin-left: auto; max-width: 110px; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
   .k-ex-meniu .k-nt-mr > span:first-child, .k-rz-meniu .k-nt-mr > span:first-child { max-width: 138px; text-align: left; }
+  /* fără ora din dreapta („2 zile înainte, la 7:00”, „Adaugă a doua alertă”), textul ia tot rândul, fără să se rupă (turul foii, 9 nov) */
+  .k-ex-meniu .k-nt-mr:not(:has(small)) > span:first-child, .k-rz-meniu .k-nt-mr:not(:has(small)) > span:first-child { max-width: none; white-space: nowrap; }
   /* un singur rând (doar de citit): textul întreg, meniul se lărgește după el (nu taie, nu intră sub pictogramă) */
   .k-rz-meniu.singur { width: max-content; max-width: calc(100% - 2 * var(--s-4)); }
   .k-rz-meniu.singur .k-nt-mr > span:first-child { max-width: none; }
@@ -3108,6 +3114,12 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-cfl-t { min-width: 0; flex: 1; }
   .k-cfl-v { position: relative; flex: none; color: var(--accent); font-weight: 600; }
   .k-cfl-v::after { content: ""; position: absolute; inset: -12px -8px; }
+  /* „Mută după” și „E în regulă”, pe loc, sub text (9 nov, hotărârea 4): ținte de 44, aliniate cu textul */
+  .k-cfl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; row-gap: 4px; }
+  .k-cfl-a { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+  .k-cfl-b { position: relative; min-height: 34px; padding: 0 14px; border-radius: var(--r-pill); background: var(--surface);
+    color: var(--accent); font: 600 var(--t-15) / 1 var(--f-body); }
+  .k-cfl-b::after { content: ""; position: absolute; inset: -5px 0; }
 
   .k-cf { background: color-mix(in srgb, var(--chihlimbar) 9%, var(--k-grup)); }
   .k-cf-h { display: flex; align-items: flex-start; gap: 10px; padding: var(--s-3) 14px 10px; }
