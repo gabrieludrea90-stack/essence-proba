@@ -3015,7 +3015,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-cd-s { font: 600 var(--t-12) / var(--lh-12) var(--f-body); color: var(--muted); padding: 0 0 6px; }
   .k-cd-z { justify-self: center; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
     font: 400 var(--t-17) / 1 var(--f-body); color: var(--ink); font-variant-numeric: tabular-nums; }
-  .k-cd-z.trecut { color: var(--faint); }
+  .k-cd-z.trecut { color: var(--muted); }   /* stins, dar de citit (limbaj §3: --faint nu e pentru text) */
   .k-cd-z.azi { color: var(--accent); font-weight: 600; }
   .k-cd-z.ales { background: var(--accent-fill); color: var(--accent-fill-ink); font-weight: 600; }
   .k-cd-z:active { background: var(--accent-soft); }
