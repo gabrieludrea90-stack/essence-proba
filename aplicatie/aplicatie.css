@@ -3022,6 +3022,30 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-cd-z.azi { color: var(--accent); font-weight: 600; }
   .k-cd-z.ales { background: var(--accent-fill); color: var(--accent-fill-ink); font-weight: 600; }
   .k-cd-z:active { background: var(--accent-soft); }
+
+  /* „Când”, pe tiparul Todoist (10 nov): câmpul de sus, variantele rapide cu ziua în dreapta, zilele săptămânii fixe sub
+     antet, lunile una sub alta, rândurile timpului fixe jos */
+  .k-cn-sus { margin-bottom: 14px; }
+  .k-cn-in { box-sizing: border-box; width: 100%; height: 48px; padding: 0 14px; border: 0; border-radius: var(--r-lg);
+    background: var(--k-grup); color: var(--ink); font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-cn-in::placeholder { color: var(--muted); }
+  .k-cn-r { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 48px; padding: 0 14px;
+    border: 0; background: none; color: var(--ink); text-align: left; font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-cn-r + .k-cn-r::before { content: ""; position: absolute; top: 0; left: 14px; right: 0; height: 1px; background: var(--hair); }
+  .k-cn-r small { margin-left: auto; color: var(--muted); font: 400 var(--t-15) / var(--lh-15) var(--f-body); }
+  .k-cn-r.ales { color: var(--accent); font-weight: 600; }
+  .k-cn-r:active { background: var(--accent-soft); }
+  .k-cn-s { position: sticky; top: var(--k-cn-cap, 68px); z-index: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+    margin: 0 calc(-1 * var(--s-4)); padding: 6px var(--s-4); background: var(--k-fond); text-align: center;
+    color: var(--muted); font: 600 var(--t-12) / var(--lh-12) var(--f-body); }
+  .k-cn .k-fl-h::before { background: var(--k-fond); }   /* antetul plin: zilele săptămânii stau lipite sub el */
+  .k-cn-l h3 { margin: 14px 0 6px; padding: 0 6px; font: 600 var(--t-17) / var(--lh-17) var(--f-body); color: var(--ink); }
+  .k-cn-l .k-cd-g { row-gap: 4px; }
+  .k-cn-jos { position: sticky; bottom: 0; z-index: 2; margin: 14px calc(-1 * var(--s-4)) 0; padding: 10px var(--s-4)
+    calc(10px + env(safe-area-inset-bottom)); background: var(--k-fond); box-shadow: 0 -1px 0 var(--hair); }
+  .k-cn-jos .k-fl-g { margin-bottom: 0; }
+  /* jos, meniurile (alerta, repetarea, ora) se deschid în sus, peste luni */
+  .k-cn-jos .k-ex-meniu { top: auto; bottom: calc(100% - 4px); }
 }
 
 /* Fereastra de notare (4b-1, P6.3 → P6.5f; etalon `fl_n-*`, `fl_k-*`): lipită de tastatură, pe toată lățimea, raza de sus
