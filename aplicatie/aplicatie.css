@@ -706,7 +706,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .ui-sh[data-niveluri] { transition: height var(--dur-3) var(--arc), transform var(--dur-3) var(--arc); }
   .ui-sh[data-niveluri="1"] { height: var(--sh-inaltime, var(--sh-jumatate)); }
   .ui-sh[data-niveluri="2"] { height: var(--sh-doua-treimi); }
-  .ui-sh[data-trage], .ui-sh[data-trage] :is(.k-fl-r.pas, .k-fl-r.pas textarea) { touch-action: none; }
+  .ui-sh[data-trage], .ui-sh[data-trage] :is(.k-fl-r.pas, textarea) { touch-action: none; }   /* orice câmp de scris: are derularea lui (Detaliile, 10 nov) */
   .ui-sh[data-inghetat] { overflow-y: hidden; }
   /* mânerul și antetul fix sunt locul de prins foaia și pe tot ecranul: tragerea lor în jos o coboară, nu derulează */
   .ui-sh[data-niveluri] :is(.z-maner, .k-fl-h) { touch-action: none; }
