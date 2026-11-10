@@ -3136,6 +3136,15 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-nt-mr.rosu { color: var(--rosu-text); }
 @keyframes k-nt-apare { from { opacity: 0; transform: translateY(4px) scale(.98); } }
 
+/* câmpul de scris din capul ferestrei (10 nov, pe tiparul Todoist): Detalii, Note, un pas, o etichetă nouă, o adresă;
+   ca un rând al ferestrei, fără chenar, cu textul de 17 (peste 16: iPhone nu mărește pagina) */
+  .k-nt-mr.scrie { flex: none; border-bottom: .5px solid var(--hair); }
+  .k-nt-mr.scrie::before { display: none; }
+  .k-nt-scrie { flex: 1; min-width: 0; height: 44px; border: 0; outline: 0; background: transparent; color: var(--ink);
+    font: 400 var(--t-17) / var(--lh-17) var(--f-body); caret-color: var(--accent); padding: 0; }
+  .k-nt-scrie::placeholder { color: var(--faint); }
+  .k-nt-mr.alta { color: var(--accent); }
+
 /* Conflictul în foaia extinsă (4b-1, P6.5; etalonul `fl_e-conflict`, desenul `fo_conf-nou`): bannerul chihlimbar sub titlu și
    blocul desfăcut la „Vezi”: antetul cu intervalul, miniatura ciocnirii, Altă oră, E în regulă. Fondul
    cald vine din `--chihlimbar`; ciocnirea e o fereastră chihlimbar pală exact între muchia de sus a primului bloc și cea de jos
