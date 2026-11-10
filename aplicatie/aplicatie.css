@@ -2799,6 +2799,7 @@ html, body { background: var(--bg); color: var(--ink); }
     white-space: pre-line; overflow-wrap: anywhere; color: var(--ink2); font: 400 var(--t-15) / 21px var(--f-body); }
   .k-fl-ic { display: grid; place-items: center; color: var(--muted); }
   .k-fl-k small { display: block; margin-top: 1px; color: var(--muted); font: 400 var(--t-15) / var(--lh-15) var(--f-body); }
+  .k-fl-k small.k-fl-s2.chihlimbar { color: var(--chihlimbar); }   /* termenul trecut, a doua linie a lui „Când” (10 nov) */
   /* valoarea: gri, ca în Calendar, Mementouri, Todoist și TickTick; semnul de la capăt spune ce face atingerea
      (⌃⌄ meniul pe loc, › pagina). Accentul rămâne pe ce e buton: ✓, comutatorul, șirul, pastilele (revizia din
      30 oct, 15:30, înlocuiește valoarea în accent din 25 oct, 17:01). Se estompează la capăt, niciodată „…”. */
