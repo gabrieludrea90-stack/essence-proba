@@ -143,8 +143,8 @@
     --btn: 50px;
     --ic-row: 34px;
     --sh-gap: calc(env(safe-area-inset-top, 0px) + 12px);
-    --sh-jumatate: 50%; /* treapta 1 a foii lucrului: puține câmpuri (P6.5i) */
-    --sh-doua-treimi: 66.667%; /* treapta 2: conținutul trece de jumătate; peste, tot 2/3 cu derularea înghețată */
+    --sh-jumatate: 50%; /* foaia lucrului până e măsurată (apoi cât conținutul, `--sh-inaltime`; 10 nov) */
+    --sh-doua-treimi: 66.667%; /* treapta 2: conținutul trece de 2/3, derularea înghețată */
     /* butoanele rotunde și pastilele din toate antetele (ecran și foaie): 44 la vedere, la 18 de margine (Apple: ~48 cu inel, ~18; 7 nov, 06:47) */
     --antet-buton: 44px;
     --antet-margine: 18px;
@@ -700,10 +700,11 @@ html, body { background: var(--bg); color: var(--ink); }
   .ui-sh.pregatit { animation: none; transform: translateY(100%); will-change: transform; }
   .ui-ov-l:has(> .ui-sh.pregatit) > .ui-scrim { animation: none; opacity: 0; }
   .ui-sh.intra { will-change: transform; }
-  /* treptele foii lucrului (P6.5i; foaie.js pune `data-niveluri`): 1 ≈ jumătate, 2 = două treimi, 3 = `.plin`, aproape tot ecranul.
+  /* înălțimile foii lucrului (P6.5i; două înălțimi, 10 nov; foaie.js pune `data-niveluri` și `--sh-inaltime`): 1 = cât
+     conținutul, 2 = două treimi (conținutul trece de ele, derularea înghețată), 3 = `.plin`, aproape tot ecranul.
      Cât foaia poate fi trasă în sus (`data-trage`), degetul e al foii (`touch-action: none`); peste 2/3, derularea e înghețată */
   .ui-sh[data-niveluri] { transition: height var(--dur-3) var(--arc), transform var(--dur-3) var(--arc); }
-  .ui-sh[data-niveluri="1"] { height: var(--sh-jumatate); }
+  .ui-sh[data-niveluri="1"] { height: var(--sh-inaltime, var(--sh-jumatate)); }
   .ui-sh[data-niveluri="2"] { height: var(--sh-doua-treimi); }
   .ui-sh[data-trage], .ui-sh[data-trage] :is(.k-fl-r.pas, .k-fl-r.pas textarea) { touch-action: none; }
   .ui-sh[data-inghetat] { overflow-y: hidden; }
@@ -2710,6 +2711,8 @@ html, body { background: var(--bg); color: var(--ink); }
   @supports not (field-sizing: content) { .k-fl-t { flex: 1 1 auto; } }
   /* Detaliile la 17, nu 15: sub 16 px iPhone-ul mărește pagina la atingerea câmpului (30 oct, 21:13) */
   .k-fl-d { margin-top: 2px; min-height: var(--s-6); color: var(--muted); font: 400 var(--t-16) / var(--lh-16) var(--f-body); }
+  /* contorul Detaliilor, doar spre capăt (10 nov) */
+  .k-fl-dc { display: block; margin-top: 2px; text-align: right; color: var(--muted); font: 400 var(--t-13) / 1 var(--f-body); font-variant-numeric: tabular-nums; }
   .k-fl-t::placeholder, .k-fl-d::placeholder, .k-fl-tf::placeholder { color: var(--faint); }
   .k-fl-steag { flex: none; padding-top: 3px; color: var(--chihlimbar); }
   .k-fl-steag svg { fill: currentColor; }
@@ -2988,6 +2991,33 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-rsp-b.ales { background: var(--accent); color: var(--accent-ink); }
   /* „Finalizat azi la 11:32”, sub Detalii (fl_e-bifat) */
   .k-fl-fin { margin: 2px 0 0; color: var(--muted); font: 400 var(--t-15) / var(--lh-15) var(--f-body); }
+
+  /* pastilele câmpurilor care lipsesc, la capătul foii (9 nov, 23:49): derulabile în lateral, marginea din dreapta estompată */
+  .k-ex-pls { margin: 4px -16px 0; }
+  .k-ex-plr { display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px 10px; scrollbar-width: none; overscroll-behavior-x: contain;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
+  .k-ex-plr::-webkit-scrollbar { display: none; }
+  .k-ex-pl { position: relative; flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px;
+    border-radius: var(--r-pill); background: var(--surface); color: var(--accent); font: 500 var(--t-15) / 1 var(--f-body); }
+  .k-ex-pl::after { content: ""; position: absolute; inset: -5px 0; }
+  .k-ex-pl:active { background: var(--surface2); }
+
+  /* pagina „Când” (10 nov): scurtăturile, luna; luna de acum pornește de la săptămâna de azi */
+  .k-cd { padding: 12px 14px 10px; }
+  .k-cd-cip { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+  .k-cd-cap { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+  .k-cd-t { font: 600 var(--t-17) / var(--lh-17) var(--f-body); color: var(--ink); }
+  .k-cd-n { display: flex; gap: 4px; }
+  .k-cd-nb { width: 44px; height: 44px; display: grid; place-items: center; color: var(--accent); border-radius: 50%; }
+  .k-cd-nb.inapoi .ui-i { transform: scaleX(-1); }
+  .k-cd-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; }
+  .k-cd-s { font: 600 var(--t-12) / var(--lh-12) var(--f-body); color: var(--muted); padding: 0 0 6px; }
+  .k-cd-z { justify-self: center; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+    font: 400 var(--t-17) / 1 var(--f-body); color: var(--ink); font-variant-numeric: tabular-nums; }
+  .k-cd-z.trecut { color: var(--faint); }
+  .k-cd-z.azi { color: var(--accent); font-weight: 600; }
+  .k-cd-z.ales { background: var(--accent-fill); color: var(--accent-fill-ink); font-weight: 600; }
+  .k-cd-z:active { background: var(--accent-soft); }
 }
 
 /* Fereastra de notare (4b-1, P6.3 → P6.5f; etalon `fl_n-*`, `fl_k-*`): lipită de tastatură, pe toată lățimea, raza de sus
