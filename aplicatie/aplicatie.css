@@ -844,6 +844,13 @@ html, body { background: var(--bg); color: var(--ink); }
     mask-image: linear-gradient(to right, transparent, #000 24px); }
   .ui-sir[data-ov="lr"] { -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
     mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+  /* o coloană care derulează pe verticală (`ui-col`; `data-ov` t, b, tb): aceeași estompare, sus și jos */
+  .ui-col[data-ov="b"] { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent); }
+  .ui-col[data-ov="t"] { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24px);
+    mask-image: linear-gradient(to bottom, transparent, #000 24px); }
+  .ui-col[data-ov="tb"] { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
   /* derularea: stă, merge încet până la capăt, stă, revine; o singură dată (Mișcare redusă: doar estomparea) */
   .ui-derulat[data-taiat="1"] { animation: ui-derulare var(--ui-dur, 8s) ease-in-out 1s 1 both; }
   @keyframes ui-derulare {
@@ -2302,7 +2309,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-r:has(> .k-z-et) + .k-r > :not(.k-z-et) .k-z-bara { border-radius: 0 0 2px 2px; }
 
   /* ferestrele libere: fără semn, text gri 13 */
-  .k-z-gol .k-z-c { min-height: 40px; padding-block: var(--s-2); }
+  .k-z-gol .k-z-c { min-height: var(--tap); padding-block: var(--s-2); }   /* „Liber” se atinge (notează): ținta de 44 (sistem §3; audit 14 nov, 16) */
   .k-z-gol.k-z-lung .k-z-c { min-height: 64px; }
   .k-z-gol .k-z-d { line-height: var(--lh-16); }
   .k-z-gol .k-z-o > b:empty { display: none; }
@@ -2323,9 +2330,10 @@ html, body { background: var(--bg); color: var(--ink); }
     line-height: var(--lh-15); font-weight: 600; }
   .k-z-sus { margin-bottom: var(--s-2); padding-inline: var(--s-4); }
 
-  /* telefon îngust (sub 360): rândul pe două linii; pastila fără Caută */
+  /* telefon îngust (sub 360) sau text Foarte mare: pastila fără comutatorul listă / ore (trece primul în ⋯); Caută rămâne
+     (o funcție nu dispare pentru că textul e mare; auditul de produs, 15 nov, G10) */
   @container (max-width: 17em) {
-    .k-ag-b[data-cauta] { display: none; }
+    .k-ag-b[data-grila] { display: none; }
   }
   @media (max-width: 359px) {
     .k-z-gol .k-z-lb { display: none; }
@@ -2710,6 +2718,9 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-cap .k-fl-cerc { width: var(--tap); height: var(--tap); margin: -9px -8px -9px -8px; }
   .k-fl-cerc .k-cerc-i { width: 26px; height: 26px; border-width: 2px; }
   .k-fl-cerc .k-cerc-i .ui-i { width: 14px; height: 14px; }
+  /* rutina: săgeata în cerc din zi, la mărimea cercului (audit 14 nov, 18) */
+  .k-fl-cerc .k-z-sg { margin: 0; }
+  .k-fl-cerc .k-z-svg { width: 26px; height: 26px; }
   .k-fl-semn { color: var(--muted); padding-top: 2px; }
   .k-fl-tc { min-width: 0; }
   .k-fl-tr { display: flex; align-items: flex-start; gap: var(--s-2); }
@@ -2778,8 +2789,9 @@ html, body { background: var(--bg); color: var(--ink); }
      textul din card; nota 13 dedesubt (revizia 5u) */
   .k-fl.k-ex { display: flow-root; }   /* marginea de jos a ultimului card rămâne în foaie: înălțimea cât conținutul o cuprinde (FF-P4a) */
   .k-fl.k-ex > .k-fl-g:last-child { margin-bottom: 0; }   /* sub ultimul card nu mai rămâne încă 14: „cât conținutul” (~1/2 pentru puține câmpuri, 7 nov) */
-  /* sub ultimul card 8 și nu 20 (FF-G, 14 nov): foaia unui lucru gol rămâne sub 1/2 și pe S23 (T1); zona de gesturi a telefonului se adaugă tot */
-  .ui-sh[data-foaie=lucru] .ui-sh-b:last-child { padding-bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px)); }
+  /* sub ultimul card 8 și nu 20 (FF-G, 14 nov): foaia unui lucru gol rămâne sub 1/2 și pe S23 (T1); zona de gesturi a telefonului se adaugă tot,
+     și locul tastaturii (`--ui-kb`, ca la foaia-formular): fără el câmpul de jos („Adaugă un pas”) nu putea fi derulat deasupra ei (P5, 14 nov) */
+  .ui-sh[data-foaie=lucru] .ui-sh-b:last-child { padding-bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px) + var(--ui-kb, 0px)); }
   .k-fl-g { margin-bottom: 14px; }   /* între carduri: 14, ca în desen (fl_e-*), nu 20 */
   .k-fl-sec { padding: 0 var(--s-4) var(--s-2); color: var(--muted); font: 600 var(--t-13) / var(--lh-13) var(--f-body); }
   .k-fl-card { overflow: hidden; border-radius: var(--r-lg); background: var(--k-grup); container-type: inline-size; }
@@ -2902,6 +2914,9 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl.pagina .k-fl-r.loc { grid-template-columns: 20px minmax(0, 1fr) auto; }
   .k-fl-schimba { min-height: var(--tap); margin-right: -6px; padding: 0 6px; color: var(--accent); font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
   .k-fl.pagina .k-fl-r.alege { grid-template-columns: 20px minmax(0, 1fr) auto; text-align: left; }   /* ✓ în accent pe valoarea aleasă (B.22) */
+  /* rândul de comandă al unei pagini („Elimină locul”, prototipul aprobat, 13 nov, `.rez.add`): ca „Adaugă”, semnul pe axa iconițelor
+     și textul pe axa textului, în accent, rândul de 52 (Gabriel, 14 nov: butonul roșu centrat i se părea nefamiliar) */
+  .k-fl.pagina .k-fl-r.comanda, .k-fl.pagina .k-fl-r.comanda .k-fl-ic { min-height: 52px; color: var(--accent); }
   /* segmentul alegerii dintre puține (Unde: Adresă | Link | Telefon · E-mail; regula 4 din audit): componenta `ui-seg`, pe un rând, la
      marginile cardurilor; numele nu se rupe pe două rânduri (rândul derulează dacă nu încape) */
   .k-fl-seg { margin: 0 0 var(--s-3); }
@@ -2959,14 +2974,19 @@ html, body { background: var(--bg); color: var(--ink); }
   /* textul unui pas e de citit până la o atingere: ținutul apăsat nu-l selectează (iOS, Android) */
   .k-fl-r.pas textarea[readonly] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .k-fl-r.pas.trage { background: var(--surface2); }
+  /* pasul glisabil (14 nov): învelișul glisării comune (`foaie-pasi.js`); rândul Zilei (`.k-rand`) nu-și aduce marginea și linia,
+     iar linia dintre pași stă pe rândul care se mută, ca la Etichete */
+  .k-fl-gl.pas-gl > .k-rand { display: block; min-height: 0; padding: 0; background: var(--k-grup); }
+  .k-fl-gl.pas-gl > .k-rand::after { display: none; }
+  .k-fl-gl.pas-gl + .k-fl-gl.pas-gl > .k-rand > .k-fl-r::before, .k-fl-gl.pas-gl + .k-fl-r::before {
+    content: ""; position: absolute; top: 0; left: 46px; right: 14px; height: 1px; transform: scaleY(.5);
+    transform-origin: top; background: var(--hair); }
   .k-rz-scrim { position: fixed; inset: 0; z-index: 4; }
   .k-rz-meniu { left: var(--rz-x, 0px); top: calc(100% - 4px); bottom: auto; right: auto;
     max-height: calc(7 * 44px); }
   .k-rz-meniu.k-rz-mai { left: auto; right: var(--s-4); top: auto; bottom: -52px; }
   /* ⋯ al foii unice: sub antet, cu marginea dreaptă la 16 de marginea ecranului (fl_e-puncte); ancora stă deja în chenarul de 16 al foii, deci `right: 0`; fără strat, ca să bată regula de mai sus */
   .k-ex-ancora .k-rz-meniu.k-rz-mai { top: 0; bottom: auto; right: 0; width: 290px; max-width: 100%; }
-  .k-ex-ancora .k-nt-mr small { max-width: 150px; white-space: nowrap; }
-  .k-ex-ancora .k-nt-mr > span:first-child { max-width: none; white-space: nowrap; }
   .k-ex .k-fl-r.act { grid-template-columns: 20px auto minmax(0, 1fr); }
   /* capul foii nu e card (desenul): semnul pe axa de 40, titlul și Detaliile pe axa de 62; bara programării cât capul */
   /* titlul coboară 8 px sub butoane: cercul, pe axa lui ×, nu se mai lipește de el (Gabriel, 8 nov, 20:21) */
@@ -2975,15 +2995,25 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ex > .k-fl-cap .k-fl-cerc { justify-self: center; margin: -9px -2px; }
   .k-ex .k-fl-cap .k-z-bara { align-self: stretch; height: auto; margin: 4px 0; justify-self: center; }
   .k-ex .k-fl-semn { display: grid; padding-top: 0; }
-  .k-rz-meniu .k-nt-mr small { margin-left: auto; max-width: 110px; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
-  .k-rz-meniu .k-nt-mr > span:first-child { max-width: 138px; text-align: left; }
-  /* fără ora din dreapta („2 zile înainte, la 7:00”, „Adaugă a doua alertă”), textul ia tot rândul, fără să se rupă (turul foii, 9 nov) */
-  .k-rz-meniu .k-nt-mr:not(:has(small)) > span:first-child { max-width: none; white-space: nowrap; }
-  /* un singur rând (doar de citit): textul întreg, meniul se lărgește după el (nu taie, nu intră sub pictogramă) */
+  /* forma meniului de sistem iOS (Gabriel, 14 nov): iconița în stânga pe o axă comună, textul secundar sub nume, fără linii în grup, o linie scurtă între grupuri, colțuri mari */
+  .k-rz-meniu.k-nt-meniu { border-radius: var(--r-sheet); overflow: hidden; }
+  .k-rz-meniu .k-nt-mr { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 12px; align-items: center;
+    justify-content: start; align-content: center; row-gap: 0; padding: 6px 16px; min-height: 44px; }
+  .k-rz-meniu:not(:has(svg)) .k-nt-mr { grid-template-columns: minmax(0, 1fr); }
+  .k-rz-meniu .k-nt-mr svg { grid-column: 1; grid-row: 1 / span 2; justify-self: center; color: var(--ink2); }
+  .k-rz-meniu .k-nt-mr > span:first-of-type { grid-column: 2; max-width: none; text-align: left; white-space: nowrap; }
+  .k-rz-meniu:not(:has(svg)) .k-nt-mr > span:first-of-type, .k-rz-meniu:not(:has(svg)) .k-nt-mr small { grid-column: 1; }
+  .k-rz-meniu .k-nt-mr small { grid-column: 2; grid-row: 2; max-width: none; white-space: nowrap; color: var(--muted);
+    font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+  .k-rz-meniu .k-nt-mr.rosu, .k-rz-meniu .k-nt-mr.rosu svg { color: var(--rosu-text); }
+  .k-rz-meniu .k-nt-mr + .k-nt-mr::before { display: none; }
+  .k-rz-meniu .k-nt-mr:not(:has(small)) > span:first-of-type { grid-row: 1 / span 2; }
+  .k-rz-meniu.k-nt-meniu { padding: 4px 0; }
+  .k-rz-meniu .k-nt-mr.grup { margin-top: 9px; }
+  .k-rz-meniu .k-nt-mr.grup::before { display: block; top: -5px; left: 16px; right: 16px; height: 1px; background: var(--hair);
+    transform: scaleY(.5); }
   .k-rz-meniu.singur { width: max-content; max-width: calc(100% - 2 * var(--s-4)); }
-  .k-rz-meniu.singur .k-nt-mr > span:first-child { max-width: none; }
-  .k-rz-meniu .k-nt-mr.grup { margin-top: 8px; }
-  .k-rz-meniu .k-nt-mr.grup::before { top: -8px; left: 0; height: 8px; background: var(--k-grup); transform: none; }
+  .k-rz-meniu.singur .k-nt-mr > span:first-of-type { white-space: normal; }
   .k-fl-t, .k-fl-d { caret-color: var(--accent); }
   .k-rz-tog { display: grid; grid-template-columns: 24px 1fr auto; column-gap: 10px; align-items: center; width: 100%; min-height: var(--tap);
     padding: 0 var(--s-4) 0 var(--s-3); text-align: left; color: var(--ink); font: 400 var(--t-16) / normal var(--f-body); }
@@ -3044,7 +3074,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-cd-z::after { content: ""; position: absolute; inset: -2px; }
   .k-fl.pagina .k-cl + .k-fl-r::before { content: ""; position: absolute; top: 0; left: 46px; right: 14px; height: 1px;
     transform: scaleY(.5); transform-origin: top; background: var(--hair); }
-  .k-fl-vt.gol { color: var(--faint); }
+  .k-fl-vt.gol { color: var(--muted); }   /* valoarea goală e text de citit (sistem §4; audit 14 nov, 5) */
 
   /* nota (FF-P6; registrul, 13 nov, 11:45–16:32): cardul de la capătul foii, scris pe loc; 16 / 21 `--ink`, „Note” estompat cât e
      gol; închisă, cel mult 3 rânduri întregi, ultimul estompat (`data-lung`, pus de `nota.js` când textul le depășește);
@@ -3107,6 +3137,11 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-gl.k-gl-ing .k-gp { min-width: var(--tap); }
   .k-fl-gl.k-gl-ing .k-gp-c { width: var(--tap); height: var(--tap); }
   .k-fl-gl.k-gl-ing .k-gl-p { gap: var(--s-2); }
+  /* în foaie, titlul rămâne pe loc (B.10, 13 nov, 04:39; audit 14 nov, 4): rândul nu se mută, iar panourile vin din dreapta peste
+     capătul lui, cât a tras degetul (`--k-ax`), pe fondul cardului (prototipul aprobat: `.sw-act`, 13 nov); trase până la capăt,
+     cercul din margine se lărgește peste rând, ca în Ziua. Aceeași glisare la Etichete, Liste și Pași */
+  .k-fl-gl.k-gl > .k-rand, .k-fl-gl.k-gl[data-gl-pt] > .k-rand { transform: none; border-radius: 0; background: var(--k-grup); }
+  .k-fl-gl.k-gl > .k-gl-st { left: auto; z-index: 2; width: var(--k-ax); max-width: 100%; overflow: hidden; background: var(--k-grup); }
   /* linia dintre rânduri: aceeași ca între rândurile obișnuite, pe rândul care se mută odată cu el */
   .k-fl.pagina .k-fl-gl:not(:first-child) > .k-rand::before, .k-fl.pagina .k-fl-gl + .k-fl-r::before {
     content: ""; position: absolute; top: 0; left: 46px; right: 14px; height: 1px; transform: scaleY(.5);
@@ -3120,8 +3155,11 @@ html, body { background: var(--bg); color: var(--ink); }
   /* foaia „Lista”: bula mare, sub ea numele; cercurile de 44 în șase coloane */
   .k-fl-info { display: grid; justify-items: center; gap: var(--s-3); padding: var(--s-4) 0 var(--s-2); }
   .k-fl-nm { width: 100%; min-height: 48px; padding: 0 var(--s-4); border: 0; border-radius: var(--r-md);
-    background: var(--pastila); color: var(--ink); text-align: center; font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
+    background: var(--pastila); color: var(--ink); text-align: left; font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
   .k-fl-nm::placeholder { color: var(--faint); font-weight: 500; }
+  /* câmpul în cardul alb, pe coloana cardurilor (audit 14 nov, 14); inelul focusului rămâne în card */
+  .k-fl-nm-card { justify-self: stretch; padding: var(--s-3); }
+  .k-fl-nm:focus-visible { outline-offset: -2px; }
   .k-fl-cercuri { display: grid; grid-template-columns: repeat(6, 1fr); justify-items: center; gap: var(--s-1);
     padding: var(--s-3) var(--s-2); }
   .k-fl-cerc { display: grid; place-items: center; width: var(--tap); height: var(--tap); border-radius: var(--r-pill);
@@ -3189,14 +3227,14 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-nt-ph { color: var(--faint); }
   /* completarea „#” și „cu ” (FF-P6): restul propunerii, estompat, imediat după cursor */
   .k-nt-fantoma { color: var(--faint); }
-  .k-nt-bule { display: flex; align-items: center; gap: var(--s-2); padding: 8px var(--s-4) 4px; }
+  .k-nt-bule { display: flex; align-items: center; gap: 10px; padding: 8px var(--s-4) 4px; }
   /* Șirul de pastile derulează doar pe orizontală (Gabriel, 8 nov, 18:31: se mișcau și sus-jos; `ui-sir` îi dă derularea
      și marginile estompate unde continuă): zona de atingere a pastilei (5 px peste și sub) încape în spațiul de 5 px al
      șirului; sus-jos nu mai e nimic de derulat. */
-  .k-nt-sir { display: flex; flex: 1; min-width: 0; gap: var(--s-2); padding-block: 5px; margin-block: -5px; }
+  .k-nt-sir { display: flex; flex: 1; min-width: 0; gap: 10px; padding: 5px 6px; margin: -5px 0 -5px -6px; }
   /* propunerile semnului deschis: prima (o acceptă Enter) pe accent, celelalte liniștite, ca pastilele goale */
   .k-nt-b.sug.alta { background: var(--pastila); color: var(--ink2); }
-  .k-nt-b.ok { width: 34px; padding: 0; justify-content: center; background: var(--surface); color: var(--faint); }
+  .k-nt-b.ok { width: 34px; padding: 0; justify-content: center; background: var(--ridicat); color: var(--faint); }
   .k-nt-b.ok[aria-disabled="false"] { background: var(--accent); color: var(--accent-ink); }
   .k-nt-b {
     position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; height: 34px; padding: 0 var(--s-3);
@@ -3206,13 +3244,19 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-nt-b::after { content: ""; position: absolute; inset: -5px -2px; }
   /* cele de 34 lățime (pastila goală, „+”, ✓) au 5 px în fiecare lateral: 44 × 44 (FF-R, 14 nov); în golul de 8 px dintre ele
      se suprapun 2 px, ca la cele cu listă; la vedere rămân 34 */
-  .k-nt-b.gol::after, .k-nt-b.plus::after, .k-nt-b.ok::after { inset: -5px; }
-  .k-nt-b.plus { width: 34px; padding: 0; justify-content: center; background: var(--surface); color: var(--accent); }
+  .k-nt-b.gol::after, .k-nt-b.comut::after, .k-nt-b.plus::after, .k-nt-b.ok::after { inset: -5px; }
+  .k-nt-b.plus { width: 34px; padding: 0; justify-content: center; background: var(--ridicat); color: var(--accent); }
   .k-nt-b.plus[aria-disabled="true"] { color: var(--faint); }
   /* pastila din „+”, fără valoare: doar iconița, fără contur (B.15), pe fondul liniștit al pastilelor */
-  .k-nt-b.gol { width: 34px; padding: 0; justify-content: center; background: var(--pastila); color: var(--muted); }
-  /* lista telefonului peste pastilă: atingerea de 44 (5 px peste și sub, 2 px în lături) */
-  .k-nt-b > .k-meniu-nat { inset: -5px -2px; width: calc(100% + 4px); height: calc(100% + 10px); }
+  .k-nt-b.gol, .k-nt-b.comut { width: 34px; padding: 0; justify-content: center; background: var(--pastila); color: var(--muted); }
+  .k-nt-b.comut[aria-pressed="true"] { color: var(--accent); }
+  /* Important apăsat: steagul chihlimbar, plin, ca lângă titlul foii (`.k-fl-steag`; registrul: „Important = steag chihlimbar”) */
+  .k-nt-b.comut[aria-pressed="true"][data-camp="important"] { color: var(--chihlimbar); }
+  .k-nt-b.comut[aria-pressed="true"][data-camp="important"] svg { fill: currentColor; }
+  /* lista telefonului peste pastilă: atingerea de 44 (5 px peste și sub, 2 px în lături). Stă deasupra zonei `::after` a
+     pastilei (venită după ea, o acoperea): fără `z-index`, degetul cădea pe pastilă, nu pe listă, focusul pleca din text și
+     lista nu se deschidea (Gabriel, iPhone, 0.5.25; drumul N21) */
+  .k-nt-b > .k-meniu-nat { z-index: 1; inset: -5px -2px; width: calc(100% + 4px); height: calc(100% + 10px); }
   /* pastila goală e doar iconița, 34 de lată: 5 px în fiecare lateral (în golul de 8 px dintre pastile se suprapun 2 px) fac 44 */
   .k-nt-b.gol > .k-meniu-nat { inset: -5px; width: calc(100% + 10px); }
   .k-nt-b[aria-expanded="true"]:not(.plus) { box-shadow: inset 0 0 0 1.5px var(--accent); }
