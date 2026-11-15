@@ -1,7 +1,7 @@
 /* Essence · pornirea fără rețea (lot-2l): pagina din cache, actualizată în fundal. Șterge doar cache-urile ei: pe Android,
-   scheletul e pe aceeași origine, iar alertele rămân ale lui până pe 11 nov. */
+   scheletul e pe aceeași origine. Alertele (4d, mutate din schelet): mesajul push arătat mereu, ora sosirii, atingerea. */
 const PREFIX = 'essence-aplicatie-';
-const CACHE = PREFIX + 'v1';
+const CACHE = PREFIX + 'v2';
 const SHELL = ['./', 'index.html', 'app.js', 'aplicatie.css', 'fonturi/figtree.woff2', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys()
@@ -16,4 +16,32 @@ self.addEventListener('fetch', (e) => {
     e.waitUntil(proaspat.catch(() => {}));   // actualizarea aterizează și după ce pagina a primit răspunsul
     return avut ?? proaspat;
   }));
+});
+
+// Alertele (lot-1a; revizorul 1s-b, 12): mesajul e declarativ (iPhone 18.4+ îl arată și singur); aici îl arătăm mereu
+// noi, ca un mesaj să nu rămână fără notificare (iOS taie abonamentul după push-uri „tăcute”) și ca Android să-l vadă.
+self.addEventListener('push', (e) => {
+  let m = {};
+  try { m = e.data?.json() ?? {}; } catch { /* mesaj fără JSON */ }
+  const n = m.notification ?? {};
+  const arata = self.registration.showNotification(n.title || 'Essence', {
+    body: n.body || '', tag: n.tag, data: { navigate: n.navigate, lucru: n.data?.lucru ?? n.tag },
+    icon: 'icon-192.png', badge: 'icon-192.png' });
+  // Întâi notificarea; ora sosirii e doar o măsurătoare, iar o eroare a ei nu atinge alerta (lot-1a).
+  e.waitUntil(arata.then(() => (n.data?.sosit_la ? fetch(n.data.sosit_la, {
+    method: 'POST', mode: 'no-cors', body: JSON.stringify({ sosit: n.data.sosit }), signal: AbortSignal.timeout(5000),
+  }) : null)).catch(() => {}));
+});
+
+// Atinsă: fereastra aplicației vine în față și primește lucrul; altfel se deschide aplicația pe el.
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const { navigate, lucru } = e.notification.data ?? {};
+  const aici = new URL('./', location.href).href;
+  e.waitUntil((async () => {
+    const ferestre = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const f = ferestre.find((c) => c.url.startsWith(aici));
+    if (f) { await f.focus(); f.postMessage({ lucru }); return; }
+    await self.clients.openWindow(navigate || `./?lucru=${encodeURIComponent(lucru ?? '')}`);
+  })());
 });
