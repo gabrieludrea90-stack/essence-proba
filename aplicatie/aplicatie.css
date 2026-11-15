@@ -3169,6 +3169,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-cerc.culoare[aria-checked="true"]::before { width: 26px; height: 26px; }
   .k-fl-cerc.pictograma[aria-checked="true"] { background: var(--pastila); color: var(--ink); box-shadow: inset 0 0 0 2px var(--accent); }
   .k-fl-cerc:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* zilele săptămânii din Personalizat (FF-L): șapte cercuri pe un rând, inițiala în cerc, cele alese pline în accent */
+  .k-fl-cercuri.multe { grid-template-columns: repeat(7, 1fr); gap: 0; padding: var(--s-2) var(--s-1); }
+  .k-fl-cerc.litera { font: 600 var(--t-15) / 1 var(--f-body); color: var(--ink); }
+  .k-fl-cerc.litera[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
 }
 
 /* Fereastra de notare (4b-1, P6.3 → P6.5f; FF-P5; etalon `fl_n-*`, `fl_k-*`): lipită de tastatură, pe toată lățimea, raza
