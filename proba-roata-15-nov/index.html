@@ -30,12 +30,14 @@ textarea{width:100%;font:inherit;font-size:17px;border:1px solid var(--line);bor
 .meniu hr{border:0;border-top:1px solid var(--line);margin:6px 16px}
 .pil input.direct{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px}
 .pil.alege{outline:2px solid var(--accent)}
+.meniu .rd{position:relative;display:flex;align-items:center;min-height:44px;padding:0 18px;font-size:17px}
+.meniu .rd input{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px;border:0}
 .sep{width:100%;font-size:13px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
 <h1>Proba roții 2</h1>
-<p><b>Runda 2 (după jurnalul tău, 09:53):</b> pastilele 1–6 au fost refuzate toate. Încearcă acum doar <b>7, 8 și 9</b>, la fel, cu tastatura sus.</p><p>7: lista e desenată de noi, ca meniul ⋯; „Altă oră…” e o atingere adevărată. 8: „Altă oră…” din lista telefonului transformă pastila în „Alege ora”; o atingi încă o dată. 9: martorul, roata atinsă direct.</p>
+<p><b>Runda 3 (09:58): încearcă doar pastila 10</b>, cu tastatura sus: lista desenată, iar rândurile „Altă oră…” și „Altă zi…” sunt chiar câmpurile telefonului (atingerea ajunge direct la ele, ca la 9).</p><p><b>Runda 2 (după jurnalul tău, 09:53):</b> pastilele 1–6 au fost refuzate toate. Încearcă acum doar <b>7, 8 și 9</b>, la fel, cu tastatura sus.</p><p>7: lista e desenată de noi, ca meniul ⋯; „Altă oră…” e o atingere adevărată. 8: „Altă oră…” din lista telefonului transformă pastila în „Alege ora”; o atingi încă o dată. 9: martorul, roata atinsă direct.</p>
 <ol>
 <li>Atinge câmpul „Scrie aici”, ca să urce tastatura.</li>
 <li>Atinge pastila 1 și alege „Altă oră…”.</li>
@@ -141,6 +143,31 @@ s8.addEventListener('change', () => {
   i.addEventListener('change', () => { p8.firstChild.textContent = '8 · ' + i.value; p8.classList.remove('alege'); i.remove(); s8.style.display = ''; });
   scrie('8: pastila arată „Alege ora”; atinge-o');
 });
+/* ── Runda 3: rândurile „Altă …” sunt chiar câmpurile telefonului, atinse direct ── */
+const M10 = document.createElement('div'); M10.className = 'meniu'; document.body.append(M10);
+M10.innerHTML = [['Fără oră', ''], null, ['Dimineața', '09:00'], ['10:30', ''], ['11:00', ''], ['După-amiaza', '14:00'], null]
+  .map(o => (o ? `<button type="button" data-v="${o[1] || o[0]}"><span>${o[0]}</span><span class="d">${o[1]}</span></button>` : '<hr>')).join('')
+  + '<div class="rd"><span>Altă oră…</span><input type="time" id="a10" value="10:00"></div>'
+  + '<div class="rd"><span>Altă zi…</span><input type="date" id="z10" value="2026-11-15"></div>';
+const p10 = document.createElement('button'); p10.type = 'button'; p10.className = 'pil'; p10.style.cssText = 'border:0;font:inherit;font-weight:600';
+p10.textContent = '10 · 10:00'; rand2.append(p10);
+const a10 = document.getElementById('a10'), z10 = document.getElementById('z10');
+urmareste(a10, '10 ora'); urmareste(z10, '10 zi');
+p10.addEventListener('pointerdown', e => e.preventDefault());
+M10.addEventListener('pointerdown', e => { if (!(e.target instanceof HTMLInputElement)) e.preventDefault(); });
+p10.addEventListener('click', () => {
+  M10.classList.add('des');
+  const r = p10.getBoundingClientRect();
+  M10.style.left = Math.max(8, Math.min(r.left, innerWidth - M10.offsetWidth - 8)) + 'px';
+  M10.style.top = Math.max(8, r.top - M10.offsetHeight - 8) + 'px';
+});
+M10.addEventListener('click', e => {
+  const b = e.target.closest('button[data-v]'); if (!b) return;
+  M10.classList.remove('des'); p10.textContent = '10 · ' + b.dataset.v; scrie('10: ales din meniu ' + b.dataset.v);
+});
+for (const i of [a10, z10]) i.addEventListener('change', () => { M10.classList.remove('des'); p10.textContent = '10 · ' + i.value; });
+document.addEventListener('click', e => { if (!M10.contains(e.target) && e.target !== p10) M10.classList.remove('des'); });
+
 </script>
 </body>
 </html>
