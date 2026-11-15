@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>Proba roții 2</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+/* Proba de telefon (15 nov): în ce fel se deschide roata orei din „Altă oră…”, în condițiile din Notează
+   (foaia jos, tastatura sus, pastilele cu lista telefonului). Fără date, fără server. */
+:root{color-scheme:light dark;--bg:#EEF2F1;--surface:#fff;--ink:#1B2A2E;--muted:#5A6B6F;--line:#DCE3E1;--accent:#2F5F8F;--pil:#E0EBF5;--ok:#2E7D4F;--no:#A15C07}
+@media (prefers-color-scheme:dark){:root{--bg:#0F181B;--surface:#1B2A2E;--ink:#E6EEEC;--muted:#9AAAAD;--line:#2A3A40;--accent:#7FB0E6;--pil:#22343A;--ok:#6FCF97;--no:#E5A54B}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,sans-serif;padding:16px 16px 340px}
+h1{font-size:22px;margin:0 0 6px}
+p{margin:0 0 10px;color:var(--muted);font-size:14px}
+ol{margin:0 0 10px;padding-left:20px;color:var(--muted);font-size:14px}
+#jurnal{background:var(--surface);border-radius:16px;padding:10px 12px;font-size:14px;display:grid;gap:4px}
+#jurnal div{border-bottom:1px solid var(--line);padding:4px 0}
+.ok{color:var(--ok)}.no{color:var(--no)}
+.foaie{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,.15)}
+textarea{width:100%;font:inherit;font-size:17px;border:1px solid var(--line);border-radius:12px;padding:10px;background:transparent;color:var(--ink);height:48px;resize:none}
+.rand{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pil{position:relative;display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:999px;background:var(--pil);color:var(--accent);font-weight:600}
+.pil select{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px}
+.pil .in{position:absolute;left:50%;top:50%;width:1px;height:1px;opacity:0;pointer-events:none;font-size:16px;border:0;padding:0}
+</style>
+</head>
+<body>
+<h1>Proba roții 2</h1>
+<p>Mai jos e o foaie ca Notează, cu șase pastile. Fiecare deschide roata orei în alt fel.</p>
+<ol>
+<li>Atinge câmpul „Scrie aici”, ca să urce tastatura.</li>
+<li>Atinge pastila 1 și alege „Altă oră…”.</li>
+<li>Dacă se deschide roata, alege o oră și închide-o.</li>
+<li>Repetă pentru fiecare pastilă, de la 1 la 6, de fiecare dată cu tastatura sus.</li>
+</ol>
+<p>Apoi trimite-mi o captură cu jurnalul de mai jos și spune-mi la care s-a deschis roata și a rămas deschisă până ai ales.</p>
+<div id="jurnal"><div>Jurnalul: aici apare ce a răspuns telefonul.</div></div>
+
+<div class="foaie">
+  <textarea placeholder="Scrie aici"></textarea>
+  <div class="rand" id="rand"></div>
+</div>
+
+<script>
+const J = document.getElementById('jurnal');
+const scrie = (t, cl) => { const d = document.createElement('div'); d.textContent = new Date().toLocaleTimeString('ro-RO') + ' · ' + t; if (cl) d.className = cl; J.prepend(d); };
+
+const lista = (n) => `<label class="pil" data-n="${n}">${n} · 10:00<select data-n="${n}"><option value="">Fără oră</option><hr>`
+  + `<option>09:00</option><option selected>10:00</option><option>11:00</option><hr><option value="alta">Altă oră…</option></select>`
+  + (n === 5 || n === 6 ? `<input type="time" class="in" data-n="${n}" value="10:00" tabindex="-1">` : '') + `</label>`;
+const rand = document.getElementById('rand');
+const deseneaza = () => { rand.innerHTML = [1, 2, 3, 4, 5, 6].map(lista).join(''); };
+deseneaza();
+
+/* câmpurile fixe, făcute la pornire (1: colțul de jos, ca 0.5.29; 2: mutat peste pastila atinsă) */
+const fix = (n) => { const i = document.createElement('input'); i.type = 'time'; i.value = '10:00'; i.tabIndex = -1; i.dataset.n = n;
+  i.style.cssText = 'position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;font-size:16px;border:0;padding:0;pointer-events:none';
+  document.body.append(i); return i; };
+const f1 = fix(1), f2 = fix(2);
+
+function urmareste(i, n) {
+  if (i.dataset.urm) return; i.dataset.urm = '1';
+  i.addEventListener('focus', () => scrie(`${n}: câmpul a primit focus`));
+  i.addEventListener('blur', () => scrie(`${n}: câmpul a pierdut focusul`));
+  i.addEventListener('change', () => scrie(`${n}: ALES ${i.value}`, 'ok'));
+}
+[f1, f2].forEach((i) => urmareste(i, i.dataset.n));
+
+function deschide(i, n) {
+  if (typeof i.showPicker !== 'function') { scrie(`${n}: telefonul n-are showPicker`, 'no'); i.focus(); return; }
+  try { i.showPicker(); scrie(`${n}: showPicker acceptat (s-a deschis roata?)`); }
+  catch (e) { scrie(`${n}: showPicker refuzat: ${e.name}`, 'no'); }
+}
+
+rand.addEventListener('change', (e) => {
+  const s = e.target;
+  if (!(s instanceof HTMLSelectElement)) return;
+  const n = Number(s.dataset.n);
+  if (s.value !== 'alta') { scrie(`${n}: ales din listă ${s.value || 'Fără oră'}`); return; }
+  s.value = '10:00';
+  if (n === 1) deschide(f1, 1);
+  else if (n === 2) {
+    const r = s.getBoundingClientRect();
+    f2.style.bottom = ''; f2.style.left = Math.round(r.left + r.width / 2) + 'px'; f2.style.top = Math.round(r.top + r.height / 2) + 'px';
+    deschide(f2, 2);
+  } else if (n === 3 || n === 4) {
+    /* făcut în clipa alegerii, lângă listă (3: rămâne; 4: scos la 0,4 s după ce pierde focusul, ca 0.5.28) */
+    const i = document.createElement('input'); i.type = 'time'; i.value = '10:00'; i.className = 'in'; i.tabIndex = -1;
+    urmareste(i, n);
+    i.addEventListener('change', () => setTimeout(() => i.remove()));
+    if (n === 4) i.addEventListener('blur', () => setTimeout(() => { i.remove(); scrie('4: câmpul a fost scos'); }, 400));
+    s.after(i); deschide(i, n);
+  } else {
+    /* 5: câmpul stă în pastilă de la început, desenat odată cu lista; 6: la fel, dar rândul se redesenează după alegere */
+    const i = s.parentElement.querySelector('input.in'); urmareste(i, n); deschide(i, n);
+    if (n === 6) setTimeout(() => { deseneaza(); scrie('6: rândul s-a redesenat'); }, 300);
+  }
+});
+</script>
+</body>
+</html>
