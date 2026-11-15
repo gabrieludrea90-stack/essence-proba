@@ -45,3 +45,10 @@ self.addEventListener('notificationclick', (e) => {
     await self.clients.openWindow(navigate || `./?lucru=${encodeURIComponent(lucru ?? '')}`);
   })());
 });
+
+// Erorile service worker-ului ajung în jurnalul paginii (aici nu există `localStorage`): doar mesajul scurt și locul din cod
+// (auditul de cod, 15 nov, 4). Fără nicio fereastră deschisă, se pierd.
+const spunePaginii = (mesaj, sursa) => self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+  .then((fs) => fs.forEach((c) => c.postMessage({ eroareSw: { mesaj: 'service worker: ' + String(mesaj ?? '').slice(0, 150), sursa } }))).catch(() => {});
+self.addEventListener('error', (e) => { spunePaginii(e.message, 'sw.js:' + (e.lineno || 0)); });
+self.addEventListener('unhandledrejection', (e) => { spunePaginii(e.reason?.message ?? e.reason, 'sw.js:0'); });
