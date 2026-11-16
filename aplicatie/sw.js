@@ -33,15 +33,19 @@ self.addEventListener('push', (e) => {
   }) : null)).catch(() => {}));
 });
 
-// Atinsă: fereastra aplicației vine în față și primește lucrul; altfel se deschide aplicația pe el.
+// Atinsă: fereastra aplicației vine în față și primește lucrul; altfel se deschide aplicația pe el. Lucrul atins se
+// pune și deoparte (`ATINS`), iar pagina îl ia la întoarcere: pe iPhone, cu aplicația deschisă, mesajul se poate
+// pierde (pagina e oprită cât e în fundal, iar `focus()` poate refuza), și atunci se deschidea lista (16 nov).
+const ATINS = 'essence-atins';
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
   const { navigate, lucru } = e.notification.data ?? {};
   const aici = new URL('./', location.href).href;
   e.waitUntil((async () => {
+    if (lucru) await caches.open(ATINS).then((c) => c.put('atins', new Response(JSON.stringify({ lucru, la: Date.now() })))).catch(() => {});
     const ferestre = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const f = ferestre.find((c) => c.url.startsWith(aici));
-    if (f) { await f.focus(); f.postMessage({ lucru }); return; }
+    if (f) { f.postMessage({ lucru }); await f.focus().catch(() => {}); return; }
     await self.clients.openWindow(navigate || `./?lucru=${encodeURIComponent(lucru ?? '')}`);
   })());
 });
