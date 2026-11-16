@@ -3248,10 +3248,10 @@ html, body { background: var(--bg); color: var(--ink); }
 
   /* corpul: grupurile, cu linia subțire a meniului între ele (și sub cap) */
   .k-fi-corp { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-bottom: var(--s-2); }
-  .k-fi-g { position: relative; }
+  /* fiecare grup are același aer sus și jos, ca un rând singur să stea centrat între cele două linii (Gabriel, 16 nov, 13:43) */
+  .k-fi-g { position: relative; padding-block: var(--s-1); }
   .k-fi-g::before { content: ''; position: absolute; inset: 0 var(--s-4) auto; height: 1px; box-shadow: inset 0 .5px 0 var(--line);
     pointer-events: none; }
-  .k-fi-g:first-child { padding-top: var(--s-3); }
 
   /* un rând: iconița · textul · valoarea exactă */
   .k-fi-r { display: flex; align-items: center; gap: var(--s-3); width: 100%; min-height: 46px; padding: var(--s-2) var(--s-4);
@@ -3299,7 +3299,7 @@ html, body { background: var(--bg); color: var(--ink); }
 
   /* semnătura: lipită jos, mică și stinsă; ochiul în dreapta, fără text */
   .k-fi-sem { flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
-    padding: var(--s-3) var(--s-4) var(--s-4); color: var(--faint); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+    padding: var(--s-3) var(--s-4) var(--s-6); color: var(--faint); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
   .k-fi-ochi { flex: none; display: grid; place-items: center; color: var(--faint); }
 }
 
