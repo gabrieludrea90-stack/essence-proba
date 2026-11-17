@@ -2918,6 +2918,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-v .k-chev { display: grid; color: var(--faint); }
   .k-fl-v > svg { flex: none; color: var(--faint); }
   .k-fl-r .k-sw { justify-self: end; margin-right: -4px; }
+  .k-fl.pagina .k-fl-r:has(> .k-sw):not(:has(> .k-fl-ic)) { grid-template-columns: minmax(0, 1fr) auto; }   /* comutator fără iconiță (Comun, în Persoane) */
+  .k-fl-r.stins .k-sw { opacity: .55; }   /* comutatorul pornit și stins (Comun pe un lucru comun) */
   .k-fl-r.act { grid-template-columns: 24px minmax(0, 1fr); }
   /* un rând cu bifă (zilele repetării, ca în Calendar): fără iconiță, ✓ în accent la capăt când e ales; linia
      dintre rânduri pornește de la text */
@@ -3109,15 +3111,6 @@ html, body { background: var(--bg); color: var(--ink); }
     background: var(--pastila); color: var(--ink2); text-align: center; font: 400 var(--t-12) / var(--lh-12) var(--f-body); }
   .k-ex-pl > span { max-width: 100%; overflow: hidden; white-space: nowrap; }
   .k-ex-pl:active { background: var(--apasat); }
-
-  /* pastila „Cine vede” de jos, în locul ochiului din semnătura fișei (16 nov, noaptea): mică, discretă, în dreapta; stinsă pe un lucru comun */
-  .k-ex-jos { display: flex; justify-content: flex-end; padding: 4px 0 0; }
-  .k-ex-vede { position: relative; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; box-sizing: border-box;
-    padding: 0 var(--s-3); border: 0; border-radius: var(--r-pill); background: var(--pastila); color: var(--ink2);
-    font: 400 var(--t-13) / var(--lh-13) var(--f-body); cursor: pointer; }
-  .k-ex-vede:active { background: var(--apasat); }
-  .k-ex-vede.stins { cursor: default; background: transparent; color: var(--faint); }
-  .k-ex-vede.stins:active { background: transparent; }
 
   /* luna desenată (FF-P4b): zilele în cercuri; inițialele la fel ca în grila lunii */
   .k-cd { padding: 12px 14px 10px; }
