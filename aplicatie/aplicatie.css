@@ -77,6 +77,11 @@
        alb pe ele ≥ 4,6:1, la fel pe luminos și pe întunecat */
     --lista-c-albastru: #3A6EA5; --lista-c-petrol: #2F6F73; --lista-c-salvie: #4F7F5E; --lista-c-indigo: #4E5AA6;
     --lista-c-pruna: #76598A; --lista-c-grafit: #5B6770;
+    /* tonul culorii pentru bare și buline ale oamenilor (16 nov; nu pentru inițialele albe, care rămân pe tonul de bază):
+       pe luminos cel de bază, pe întunecat mai deschis, ≥ 3:1 față de fond (#172226, #1D2B30). Un singur loc. */
+    --semn-c-albastru: light-dark(#3A6EA5, #4A7AAC); --semn-c-petrol: light-dark(#2F6F73, #488084);
+    --semn-c-salvie: light-dark(#4F7F5E, #538261); --semn-c-indigo: light-dark(#4E5AA6, #6A74B4);
+    --semn-c-pruna: light-dark(#76598A, #866D98); --semn-c-grafit: light-dark(#5B6770, #6F7981);
     --act-done: #2E7D50;
     --act-neutral: light-dark(#636366, #4A4A4E);
     --on-act: #FFFFFF;
@@ -1425,6 +1430,7 @@ html, body { background: var(--bg); color: var(--ink); }
     margin: 0; padding: 0; border: 0; background: none; font: inherit; color: var(--muted);
   }
   .k-gl-ing .k-gp { min-width: 34px; gap: 0; }
+  .k-gp[aria-disabled="true"] { opacity: .5; }
   .k-gp-c {
     display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--r-pill);
     color: var(--gp-ink, #fff);
@@ -2077,6 +2083,13 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-meniu:not(.lista, .confirma) { width: var(--fereastra-mica); min-width: 0; }
   .k-meniu.confirma { width: 252px; min-width: 0; padding: var(--s-5) var(--s-4) var(--s-4); border-radius: 34px; }
   .k-meniu.confirma .k-meniu-t { padding: 0 var(--s-3) var(--s-4); color: var(--ink); font: 400 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-meniu.confirma .k-meniu-n { padding: 0 var(--s-3) var(--s-4); margin-top: calc(-1 * var(--s-2)); color: var(--muted);
+    font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+  .k-meniu.confirma .k-meniu-n p { margin: 0; }
+  /* nota stinsă de la capătul unei liste desenate (Cine vede), sub linia subțire */
+  .k-meniu.lista .k-meniu-n { padding: var(--s-3) var(--s-4); border-top: 1px solid var(--hair); color: var(--muted);
+    font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+  .k-meniu.lista .k-meniu-n p { margin: 0; }
   .k-meniu.confirma .k-meniu-g { display: flex; flex-direction: column; gap: var(--s-2); }
   .k-meniu.confirma .k-meniu-r {
     justify-content: center;
@@ -2089,6 +2102,9 @@ html, body { background: var(--bg); color: var(--ink); }
   }
   .k-meniu.confirma .k-meniu-r:active { background: color-mix(in srgb, var(--ink) 16%, transparent); }
   .k-meniu.confirma .k-meniu-r[data-distruge] { color: var(--rosu-text); }
+  /* butonul principal al confirmării (Continuă): plin, în accent */
+  .k-meniu.confirma .k-meniu-r[data-plin] { background: var(--accent); color: var(--accent-ink); }
+  .k-meniu.confirma .k-meniu-r[data-plin]:active { background: color-mix(in srgb, var(--accent) 85%, var(--ink)); }
 
   /* lista desenată (FF-LD): rădăcina fixă în gazdă (foaia o mută cu `transform`, deci coordonatele sunt ale ei), lista ei
      absolută; lățime `--fereastra-mica` (cel mult ecranul − 32, din cod), derulată în sine când nu încape */
@@ -2099,10 +2115,10 @@ html, body { background: var(--bg); color: var(--ink); }
   }
   .k-meniu-radacina.lista-r.iese .k-meniu { animation: k-meniu-out var(--dur-iese) var(--arc-iese) both; }
   /* coloana bifei rămâne și când nu e nimic bifat; valoarea stinsă la dreapta, cifre de lățime egală */
-  .k-lista-r { position: relative; gap: var(--s-3); text-align: left; }
+  .k-lista-r { position: relative; gap: var(--s-2); text-align: left; }
   .k-meniu-r.k-lista-r > .k-lista-b { flex: none; display: inline-flex; width: 18px; height: 18px; color: var(--accent); }
-  .k-meniu-r.k-lista-r > .k-lista-n { flex: 1; min-width: 0; overflow-wrap: normal; }
-  .k-lista-v { margin-left: auto; position: static; top: 0; text-align: right; font: 400 var(--t-16) / var(--lh-16) var(--f-body);
+  .k-meniu-r.k-lista-r > .k-lista-n { flex: 1; min-width: min-content; overflow-wrap: normal; }
+  .k-lista-v { margin-left: auto; white-space: normal; position: static; top: 0; text-align: right; font: 400 var(--t-16) / var(--lh-16) var(--f-body);
     font-variant-numeric: tabular-nums; }
   .k-lista-v[data-ton="accent"] { font-weight: 400; }
   .k-lista-r[aria-disabled="true"] { color: var(--faint); }
@@ -2225,6 +2241,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ag-b { position: relative; width: var(--antet-buton); height: var(--antet-buton); display: grid; place-items: center; margin: 0; padding: 0;
     border: 0; background: none; border-radius: var(--r-pill); color: var(--ink); }
   .k-ag-b:active { transform: none; background: var(--seg-bg); }
+  .k-ag-b[aria-disabled="true"] { opacity: .5; }
   .k-ag-b[aria-expanded="true"], .k-ag-scara[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 22%, transparent); }
   .k-ag-n { position: absolute; top: var(--s-1); right: 3px; min-width: 18px; height: 18px; padding: 0 var(--s-1); border-radius: 9px;
     background: var(--accent); color: var(--accent-ink); font: 700 var(--t-12) / 18px var(--f-body); text-align: center; }
@@ -2317,6 +2334,7 @@ html, body { background: var(--bg); color: var(--ink); }
     -webkit-mask: radial-gradient(circle, transparent 8px, #000 8.5px); mask: radial-gradient(circle, transparent 8px, #000 8.5px); }
   .k-z-bara { width: 4px; align-self: stretch; border-radius: 2px; background: var(--accent); }
   .k-z-bara[data-peer] { background: var(--peer-fg); }
+  .k-z-bara[data-c] { background: var(--cs); }   /* culoarea omului (16 nov): din `culoareaOmului`, prin vedere */
   .k-z-punct { width: 4px; align-self: stretch; margin-bottom: calc(var(--kz-rp) * -1); opacity: .75; border-radius: 2px 2px 0 0;
     background: repeating-linear-gradient(to bottom, var(--accent) 0 3px, transparent 3px 6px); }
 
@@ -2325,6 +2343,14 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-pro .k-z-ti { font-weight: 400; }
   .k-z-pro .k-z-o > b, .k-z-pro .k-z-o > span { color: var(--muted); font-weight: 400; }
   .k-z-tr .k-z-ti, .k-z-tr .k-z-o > b { color: var(--muted); font-weight: 400; }
+  /* ce ai pus pentru altul (16 nov): cercul plin (nu punctat: punctatul e al sugeratelor), doar mai stins; textul stins, inițiala lui
+     în dreapta; nu se bifează (atingerea cercului spune cine poate) */
+  .k-z-altul .k-z-ti, .k-z-altul .k-z-o > b { color: var(--muted); font-weight: 400; }
+  .k-z-altul .k-z-sg, .k-z-altul .k-z-o > span { opacity: .5; }
+  .k-z-ini { display: inline-grid; place-items: center; width: calc(var(--s-6) + var(--s-1)); height: calc(var(--s-6) + var(--s-1));
+    margin-left: var(--s-2); border-radius: var(--r-pill); background: var(--pastila); color: var(--ink2);
+    font: 600 var(--t-13) / var(--lh-13) var(--f-body); vertical-align: middle; }
+  .k-z-ini[data-c] { background: var(--c); color: #fff; }   /* inițiala în culoarea omului (alb ≥ 4,6:1, ca bula listelor) */
   .k-z-tr .k-z-curs .k-z-ti { font-weight: 600; }
   .k-z-tr .k-z-bara, .k-z-tr .k-z-punct { opacity: .4; }
   .k-r:has(> .k-z-tr) + .k-r > .k-z-tr .k-z-c { padding-top: 2px; }
@@ -2471,6 +2497,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-g-prog.k-g-mic::before { top: 4px; bottom: 4px; }
   .k-g-prog.k-g-alt { background: color-mix(in srgb, var(--peer-fg) 14%, var(--surface)); }
   .k-g-prog.k-g-alt::before { background: var(--peer-fg); }
+  .k-g-prog.k-g-alt[data-c] { background: color-mix(in srgb, var(--cs) 14%, var(--surface)); }
+  .k-g-prog.k-g-alt[data-c]::before { background: var(--cs); }
   .k-g-pro { background: color-mix(in srgb, var(--surface2) 55%, transparent); }
   .k-g-pro .k-g-ti { font-weight: 400; color: var(--ink2); }
   .k-g-priv { background: repeating-linear-gradient(135deg, var(--surface2) 0 6px, transparent 6px 10px); }
@@ -2554,6 +2582,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lu-c .ui-i { color: var(--muted); flex: none; }
   .k-lu-bara { flex: none; width: 4px; height: 18px; border-radius: 2px; background: var(--accent); }
   .k-lu-bara[data-peer] { background: var(--peer-fg); }
+  .k-lu-bara[data-c] { background: var(--cs); }
   .k-lu-lib { display: flex; margin: 0; padding: var(--s-1) 0 var(--s-2); font-size: var(--t-13); line-height: var(--lh-16); color: var(--muted); }
   .k-lu-lib::before { content: ""; flex: none; width: calc(var(--kz-ora) + var(--kz-semn) + 2 * var(--s-3)); }
   .k-lu-r { display: grid; grid-template-columns: var(--kz-ora) var(--kz-semn) minmax(0, 1fr) auto; column-gap: var(--s-3); align-items: center; width: 100%;
@@ -2658,6 +2687,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ca-t b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 var(--t-16) / 21px var(--f-body); }
   .k-ca-t b em { font-style: normal; font-weight: 600; }
   .k-ca-sc .k-ca-t b { font-weight: 400; }
+  .k-ca-sc[aria-disabled="true"] { opacity: .5; }
   .k-ca-t small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 var(--t-13) / 18px var(--f-body); color: var(--muted); }
   .k-ca-r[data-trecut] .k-ca-t b, .k-ca-r[data-trecut] .k-ca-t b em { color: var(--muted); }
   .k-ca-r[data-trecut] .k-ca-t b { font-weight: 400; }
@@ -2967,9 +2997,14 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-init { display: grid; place-items: center; width: calc(var(--s-6) + var(--s-1)); height: calc(var(--s-6) + var(--s-1));
     margin-inline: calc(-1 * var(--s-1)); border-radius: var(--r-pill); background: var(--pastila);
     color: var(--ink2); font: 600 var(--t-13) / var(--lh-13) var(--f-body); }
+  .k-init[data-c] { background: var(--c); color: #fff; }   /* inițiala în culoarea omului (16 nov) */
   .k-fl-r.bifa.stins { cursor: default; }
   .k-fl-r.bifa.stins .k-fl-v.bifa > svg { color: var(--faint); }
   .k-fl-r.bifa.stins:active { background: transparent; }
+  /* rândul stins al unui câmp care nu se mai poate schimba („Cine vede” pe un lucru comun): rămâne, atins spune „Indisponibil” */
+  .k-fl-r.stins:not(.bifa) { cursor: default; }
+  .k-fl-r.stins:not(.bifa) :is(.k-fl-ic, .k-fl-k, .k-fl-vt) { color: var(--faint); }
+  .k-fl-r.stins:not(.bifa):active { background: transparent; }
   .k-fl-r.nou-rand:not(.cauta) .k-fl-tf::placeholder, .k-fl-r.nou-pas .k-fl-tf::placeholder { color: var(--accent); }
   /* rândul „Etichetă nouă” continuă cardul listei de deasupra, cu linia dintre ele */
   .k-fl-bife:has(+ .k-fl-g.lipit) > .k-fl-g:last-child { margin-bottom: 0; }
@@ -3075,6 +3110,15 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ex-pl > span { max-width: 100%; overflow: hidden; white-space: nowrap; }
   .k-ex-pl:active { background: var(--apasat); }
 
+  /* pastila „Cine vede” de jos, în locul ochiului din semnătura fișei (16 nov, noaptea): mică, discretă, în dreapta; stinsă pe un lucru comun */
+  .k-ex-jos { display: flex; justify-content: flex-end; padding: 4px 0 0; }
+  .k-ex-vede { position: relative; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; box-sizing: border-box;
+    padding: 0 var(--s-3); border: 0; border-radius: var(--r-pill); background: var(--pastila); color: var(--ink2);
+    font: 400 var(--t-13) / var(--lh-13) var(--f-body); cursor: pointer; }
+  .k-ex-vede:active { background: var(--apasat); }
+  .k-ex-vede.stins { cursor: default; background: transparent; color: var(--faint); }
+  .k-ex-vede.stins:active { background: transparent; }
+
   /* luna desenată (FF-P4b): zilele în cercuri; inițialele la fel ca în grila lunii */
   .k-cd { padding: 12px 14px 10px; }
   .k-cd-cip { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
@@ -3150,12 +3194,12 @@ html, body { background: var(--bg); color: var(--ink); }
     height: calc(var(--s-6) + var(--s-1)); margin-inline: calc(1px - var(--s-1)) calc(-1px - var(--s-1)); border-radius: var(--r-pill);
     background: var(--c, var(--lista-c-albastru)); color: #fff; }
   .k-bula.mare { width: 64px; height: 64px; margin: 0; }
-  [data-c="albastru"] { --c: var(--lista-c-albastru); }
-  [data-c="petrol"] { --c: var(--lista-c-petrol); }
-  [data-c="salvie"] { --c: var(--lista-c-salvie); }
-  [data-c="indigo"] { --c: var(--lista-c-indigo); }
-  [data-c="pruna"] { --c: var(--lista-c-pruna); }
-  [data-c="grafit"] { --c: var(--lista-c-grafit); }
+  [data-c="albastru"] { --c: var(--lista-c-albastru); --cs: var(--semn-c-albastru); }
+  [data-c="petrol"] { --c: var(--lista-c-petrol); --cs: var(--semn-c-petrol); }
+  [data-c="salvie"] { --c: var(--lista-c-salvie); --cs: var(--semn-c-salvie); }
+  [data-c="indigo"] { --c: var(--lista-c-indigo); --cs: var(--semn-c-indigo); }
+  [data-c="pruna"] { --c: var(--lista-c-pruna); --cs: var(--semn-c-pruna); }
+  [data-c="grafit"] { --c: var(--lista-c-grafit); --cs: var(--semn-c-grafit); }
   .k-fl-ic.gri { color: var(--faint); }   /* „Fără listă”: pictograma stinsă */
 
   /* rândul glisabil: panourile stau sub rând (absolute), rândul se mută peste ele; cercuri de 44, fără etichetă la vedere */
@@ -3277,6 +3321,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fi-av { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
     background: var(--peer-fg); color: var(--surface); font: 600 10px / 1 var(--f-body); }
   .k-fi-av[data-eu] { background: var(--accent-fill); color: var(--accent-fill-ink); }
+  .k-fi-av[data-c] { background: var(--c); color: #fff; }   /* culoarea fiecărui om (16 nov), și a ta */
   .k-fi-av + .k-fi-av { top: 6px; left: 12px; width: 16px; height: 16px; font-size: 8px; box-shadow: 0 0 0 1.5px var(--glass); }
 
   /* pașii: cercul în coloana iconițelor; tot rândul se atinge */
@@ -3589,6 +3634,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lp-tl { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: var(--s-3) 14px; border: 0; border-radius: var(--r-md);
     background: var(--bg); color: var(--muted); font: 600 var(--t-15) / var(--lh-15) var(--f-body); text-align: left; }
   .k-lp-tl:active { transform: none; background: var(--seg-bg); }
+  /* ce nu e gata (a.curand): stins, spune „Indisponibil” la atingere (Gabriel, 16 nov) */
+  .k-lp-tl[aria-disabled="true"], .k-lp-rb[aria-disabled="true"] { opacity: .5; }
   .k-lp-tp { display: flex; justify-content: space-between; align-items: center; width: 100%; }
   .k-lp-tp b { font: 700 var(--t-28) / var(--lh-28) var(--f-body); color: var(--ink); font-variant-numeric: tabular-nums; }
   .k-lp-bu { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; }
@@ -3702,6 +3749,7 @@ html, body { background: var(--bg); color: var(--ink); }
     padding: 5px 14px; border: 0; border-radius: 0; background: none; color: var(--ink); font: 400 var(--t-16) / 21px var(--f-body);
     text-align: left; }
   button.k-st-r:active { transform: none; background: var(--surface2); }
+  .k-st-r[aria-disabled="true"] { opacity: .5; }
   .k-st-r + .k-st-r::before { content: ""; position: absolute; top: 0; left: 14px; right: 0; height: 1px; background: var(--hair);
     transform: scaleY(.5); }
   .k-st-t { flex: 1; min-width: 0; }
@@ -3709,6 +3757,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-st-v { display: flex; align-items: center; gap: 4px; color: var(--muted); font: 400 var(--t-16) / 21px var(--f-body); white-space: nowrap; }
   .k-st-link { color: var(--accent); }
   .k-st-pc { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+  .k-st-pc[data-c] { background: var(--cs); }   /* culoarea omului (16 nov): bulina din Familia și din foaia omului */
+  .k-st-pm { width: 16px; height: 16px; }
   .k-st-nota { margin: 6px 32px 0; font: 400 var(--t-13) / var(--lh-18) var(--f-body); color: var(--muted); }
   /* comutatorul: 44 × 26 */
   .k-st-tg { appearance: none; -webkit-appearance: none; position: relative; flex: none; width: 44px; height: 26px; margin: 0;
