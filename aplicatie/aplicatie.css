@@ -2920,6 +2920,8 @@ html, body { background: var(--bg); color: var(--ink); }
     margin: calc((var(--control-mic) - var(--antet-buton)) / 2) 0; /* ținta de 44 intră în cap cu 34, ca titlul să rămână la A 32 / B 30 (regula A/B) */
     padding: 0; border: 0; background: none; color: var(--muted); }
   /* cercul văzut e `--buton-cerc` (40) în ținta `--antet-buton` (44) */
+  /* ⋯ stă fix în colțul de sus al fișei, pe axa primului rând al titlului, oricâte rânduri are titlul (Gabriel, 19 nov, 00:28: cobora cu un titlu pe două rânduri) */
+  .k-fi-cap > .k-fi-pct { align-self: flex-start; margin-top: calc((var(--lh-22) - var(--antet-buton)) / 2); }
   .k-fi-pct::before { content: ''; position: absolute; inset: calc((var(--antet-buton) - var(--buton-cerc)) / 2); border-radius: 50%;
     background: var(--pastila); }
   .k-fi-pct .ui-i { position: relative; }
