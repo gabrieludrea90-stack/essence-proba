@@ -2349,7 +2349,7 @@ html, body { background: var(--bg); color: var(--ink); }
      Lungimea antetului e `--fl-sus` + ținta + `--s-2` (66): B sub titlu = `--bara-dupa` (pagina începe chiar sub antet). */
   .k-foaie-fl .z-maner { position: sticky; top: 0; z-index: 3; flex: none; height: var(--fl-sus); padding: 0; margin-bottom: calc(-1 * var(--fl-sus)); }
   /* mânerul e un buton adevărat (19 nov): atingerea de lângă el nu mai e îndreptată de telefon spre „Azi ›” de dedesubt, care închidea foaia */
-  .k-foaie-fl button.z-maner { display: block; width: 100%; border: 0; background: none; color: inherit; cursor: pointer; }
+  .k-foaie-fl button.z-maner { display: block; width: calc(2 * var(--tap)); margin-inline: auto; border: 0; background: none; color: inherit; cursor: pointer; }   /* doar în jurul liniuței (Gabriel, 19 nov: zonele libere ale antetului îl acționau) */
   .k-fl-h {
     position: sticky;
     top: 0;
@@ -2890,7 +2890,8 @@ html, body { background: var(--bg); color: var(--ink); }
   :root {
     --fi-steag-sus: 5px;
   }
-  .z-poz:has(> .k-foaie-fisa) { padding: 0 var(--fereastra-margine) max(var(--fereastra-margine), env(safe-area-inset-bottom, 0px)); }
+  /* aceeași distanță jos ca lateral (Gabriel, 19 nov), nu mai mare cât zona de gesturi a telefonului */
+  .z-poz:has(> .k-foaie-fisa) { padding: 0 var(--fereastra-margine) var(--fereastra-margine); }
   /* `.ui-sh.k-foaie` (foi.css) dă foilor fondul opac `--k-fond`: fișa îl bate cu specificitatea, nu cu `!important`; fondul
      e `--sticla-groasa` (campuri.css: fondul foii la 94 %) */
   .ui-sh.k-foaie.k-foaie-fisa {
