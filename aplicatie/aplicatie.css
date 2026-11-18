@@ -2348,6 +2348,8 @@ html, body { background: var(--bg); color: var(--ink); }
      ținta la `--antet-margine` (14), deci cercul la 16 de margine, lateral și sus, aliniat cu cardurile; între ⋯ și ✓, 8 văzuți.
      Lungimea antetului e `--fl-sus` + ținta + `--s-2` (66): B sub titlu = `--bara-dupa` (pagina începe chiar sub antet). */
   .k-foaie-fl .z-maner { position: sticky; top: 0; z-index: 3; flex: none; height: var(--fl-sus); padding: 0; margin-bottom: calc(-1 * var(--fl-sus)); }
+  /* mânerul e un buton adevărat (19 nov): atingerea de lângă el nu mai e îndreptată de telefon spre „Azi ›” de dedesubt, care închidea foaia */
+  .k-foaie-fl button.z-maner { display: block; width: 100%; border: 0; background: none; color: inherit; cursor: pointer; }
   .k-fl-h {
     position: sticky;
     top: 0;
