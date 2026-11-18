@@ -24,6 +24,7 @@
     --surface: light-dark(#FFFFFF, #172226);
     --surface2: light-dark(#F4F7F6, #1D2B30); /* câmpuri, cercuri −/+, schelet; fondul apăsat al rândului */
     --seg-bg: light-dark(#E6ECEA, #22323A); /* segmentul, butoanele rotunde ale șirului */
+    --seg-ales: light-dark(var(--surface), #6A6A70); /* alegerea din segment; întunecat: nuanța `--cerc-contur` (#7C7C82) coborâtă la contrast 4,56 cu `--ink` (era 3,51; verifica-ecran --inchidere, 18 nov) */
     --line: light-dark(#DCE3E1, #2A3A40); /* linia de grup, 1 pt (`--linie`, G1, 17 nov) */
     --trecut: light-dark(#E8EDEB, #0A1114); /* tonul trecutului pe grila pe ore (4 nov, 09:15: acul orei respins; ziua ca listă nu-l are) */
     --hair: light-dark(#E1E7E5, #3A4E55); /* linia dintre rândurile unui grup */
@@ -139,16 +140,14 @@
     --fereastra-mica: 250px; /* lățimea fixă a meniurilor ⋯ și a listelor desenate (Gabriel, 16 nov: peste tot 260) */
     --row-meniu: 42px; /* rândul meniurilor și al listelor desenate: excepția de la ținta de 44 (rânduri lipite, ca la Apple; FF-LD) */
     --row-g: 52px; /* rândul unui grup (Setări, foi) */
-    --row-2: 56px;
-    --placuta-l: calc(var(--t-12) * 6); /* lățimea plăcuței unui câmp opțional gol: 72 la mărimea implicită (registrul, 13 nov, seara: grila de 8; „Participanți” încape), crește cu textul ca numele să încapă (6 × mărimea textului ei, 12: o lățime cu text crește cât textul, nu cu aceiași 2 / 4 puncte); înălțimea e `--row-2` */
     --btn: 50px;
     --sh-gap: calc(env(safe-area-inset-top, 0px) + 12px);
     --sh-jumatate: 50%; /* foaia lucrului până e măsurată (apoi cât conținutul, `--sh-inaltime`; 10 nov) */
     --sh-doua-treimi: 66.667%; /* treapta 2: conținutul trece de 2/3, derularea înghețată */
-    /* butoanele rotunde și pastilele din toate antetele (ecran și foaie): ținta 44 (cercul văzut e `--buton-cerc`, 40); ținta la 14,
-       deci cercul de 40 se vede la 16 de margine, aliniat cu cardurile (registrul, 16 nov, seara, piesa 2; înlocuiește 18 din 7 nov). */
+    /* butoanele rotunde și pastilele din toate antetele (ecran și foaie): cercul văzut = ținta = 44, ca iPhone (măsurat 16 nov:
+       Calendar, Mail, Mementouri), la 16 de margine, aliniat cu cardurile (registrul, 18 nov; înlocuiește cercul de 40 din piesa 2). */
     --antet-buton: 44px;
-    --antet-margine: 14px;
+    --antet-margine: var(--s-4);
     /* Piesele comune (registrul, 16 nov, seara; valorile și piesele în `docs/referinte/piese-catalog-16-nov/catalog.md`, „Tokenurile”):
        ferestrele, capul, rândul, grupul. Nicio fereastră nu stă încă pe ele (PC-A, PC-B, PC-C); poarta numără numerele proprii rămase. */
     --fereastra-raza: 32px; /* colțurile meniurilor și ale fișei */
@@ -156,8 +155,8 @@
     --sticla-groasa-blur: blur(20px) saturate(180%);
     --meniu-linie-inset: var(--s-6); /* linia de grup a meniului, de la 24 la 24 */
     --row-citit: 44px; /* rândul de citit (fișa) */
-    --row-sub: calc(var(--row-g) + var(--s-1)); /* rândul cu subtitlu */
-    --buton-cerc: 40px; /* cercul văzut al butoanelor rotunde (ținta e `--antet-buton`) */
+    --row-sub: calc(var(--row-g) + var(--s-1)); /* rândul cu subtitlu (56) și plăcuța foii; un singur token pentru 56 (18 nov) */
+    --buton-cerc: var(--antet-buton); /* cercul văzut al butoanelor rotunde = ținta (18 nov) */
     --fl-sus: var(--antet-margine); /* sus în foaia lucrului */
     --buton-fond-pagina: color-mix(in srgb, var(--ink) 7%, transparent); /* ‹ și pastila paginilor */
     --r-tastatura: var(--r-lg); /* notarea: colțurile tastaturii iOS 27 */
@@ -719,7 +718,7 @@ html, body { background: var(--bg); color: var(--ink); }
     padding-inline: var(--s-4); background: var(--surface);
     transition: background-color var(--dur-apasa) ease;
   }
-  .k-h2 { min-height: var(--row-2); }
+  .k-h2 { min-height: var(--row-sub); }
   .k-cu-cerc { --k-sep: calc(var(--s-4) + var(--rand-axa-cerc)); }
   .k-grup .k-c .k-ti, .k-grup .k-c .k-v { font-size: var(--t-17); line-height: var(--lh-17); }
   .k-cu-ic { --k-sep: calc(var(--s-4) + var(--rand-ic) + var(--s-3)); }
@@ -829,7 +828,7 @@ html, body { background: var(--bg); color: var(--ink); }
   /* scheletul: apare după 300 ms, ca o încărcare rapidă să nu clipească; static, fără străluciri */
   .k-sch { animation: k-sch-intra var(--dur-2) var(--arc) 300ms both; }
   @keyframes k-sch-intra { from { opacity: 0; } }
-  .k-sch-r { position: relative; display: flex; align-items: center; gap: var(--s-3); min-height: var(--row-2); padding: 0 var(--s-4); }
+  .k-sch-r { position: relative; display: flex; align-items: center; gap: var(--s-3); min-height: var(--row-sub); padding: 0 var(--s-4); }
   .k-sch-r + .k-sch-r::before {
     content: ""; position: absolute; top: 0; left: calc(var(--s-4) + var(--rand-axa-cerc)); right: 0; height: 0;
     border-top: var(--linie) solid var(--line);
@@ -1026,19 +1025,19 @@ html, body { background: var(--bg); color: var(--ink); }
     --k-grup: var(--surface);
     --k-camp: var(--surface2);
     --k-seg: var(--seg-bg);
-    --k-seg-ales: light-dark(var(--surface), var(--cerc-contur));
+    --k-seg-ales: var(--seg-ales);
     /* butoanele rotunde din foi (catalogul pieselor, piesa 2): fondul grupului, declarat aici ca să urmeze `--k-grup` al foii */
     --buton-fond-foaie: var(--k-grup);
     /* fondul fișei (piesa 5): fondul foii la 94 %, cu `--sticla-groasa-blur`; meniul păstrează `--glass` */
     --sticla-groasa: color-mix(in srgb, var(--k-fond) 94%, transparent);
   }
+  /* segmentul: capsula are peste tot fondul din Setări, `--seg-bg` (Gabriel, 18 nov: „ca în Setări peste tot”), deci foaia nu o suprascrie */
   .k-foaie {
     --k-fond: light-dark(var(--bg), var(--surface));
     --k-grup: var(--ridicat);
     --buton-fond-foaie: var(--k-grup);
     --sticla-groasa: color-mix(in srgb, var(--k-fond) 94%, transparent);
     --k-camp: light-dark(var(--surface2), var(--sh-x));
-    --k-seg: light-dark(var(--seg-bg), var(--sh-x));
   }
   /* grupul alb: colț 18, linii de 0,5 px care pornesc de la text */
   .k-fg { overflow: hidden; border-radius: var(--r-lg); background: var(--k-grup); }
@@ -1066,7 +1065,7 @@ html, body { background: var(--bg); color: var(--ink); }
     color: var(--ink);
     font: 400 var(--t-17) / var(--lh-17) var(--f-body);
   }
-  .k-fr.cu-sub { min-height: var(--row-2); }
+  .k-fr.cu-sub { min-height: var(--row-sub); }
   .k-fr-l { min-width: 0; }
   .k-fr-l small { display: block; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
   .k-fr-c { display: flex; flex: none; align-items: center; gap: var(--s-2); color: var(--muted); }
@@ -1558,9 +1557,7 @@ html, body { background: var(--bg); color: var(--ink); }
   /* iOS 26: iconița în stânga, apoi textul; fără linii între rânduri */
   .k-meniu-r > svg { flex: none; order: -1; width: var(--ic-rand); height: var(--ic-rand); color: var(--ink); }
   .k-meniu-r[data-distruge] > svg { color: var(--muted); }
-  /* ⋯ și scara (fișa §4): textul, apoi iconița sau bifa în dreapta; valoarea (Intrări, Liste) înaintea iconiței, tot în dreapta */
-  .k-meniu.dr .k-meniu-r { justify-content: space-between; }
-  .k-meniu.dr .k-meniu-r > svg { order: 0; }
+  .k-meniu-r > .k-meniu-gol { flex: none; order: -1; width: var(--ic-rand); height: var(--ic-rand); }
   .k-meniu-r:has(.k-meniu-v):not(.k-lista-r) > span:first-child { flex: 1; }
   /* o jumătate de pixel mai jos decât eticheta: centrul valorii nu cade deasupra celui al etichetei (ordinea de citire din desen) */
   .k-meniu-v { position: relative; top: var(--meniu-v-optic); white-space: nowrap; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
@@ -1819,7 +1816,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-rand.k-z-r { display: block; min-height: 0; padding: 0; background: var(--surface); }
   .k-z-r::after { display: none; }
   .k-z-c { display: grid; grid-template-columns: var(--kz-ora) var(--kz-semn) minmax(0, 1fr) auto; column-gap: var(--s-3);
-    align-items: start; width: 100%; min-height: var(--row-2); margin: 0; padding: var(--kz-rp) var(--s-4); border: 0; background: none;
+    align-items: start; width: 100%; min-height: var(--row-sub); margin: 0; padding: var(--kz-rp) var(--s-4); border: 0; background: none;
     color: inherit; font: inherit; text-align: left; -webkit-tap-highlight-color: transparent; }
   .k-z-c:active { transform: none; }
   .k-z-c:focus-visible { outline-offset: -2px; }
@@ -1832,7 +1829,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-t { min-width: 0; }
   .k-z-ti { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
     font-size: var(--t-16); line-height: var(--lh-16); font-weight: 500; color: var(--ink); }
-  .k-z-sub { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1); font-size: var(--t-13); line-height: var(--lh-13);
+  .k-z-sub { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1); min-height: var(--lh-13); /* rândul cu doar ↻ sau steag are tot linia de text: 56, nu 52 (18 nov) */ font-size: var(--t-13); line-height: var(--lh-13);
     color: var(--muted); }
   .k-z-d { padding-left: var(--s-3); font-size: var(--t-13); line-height: var(--lh-16); color: var(--muted); white-space: nowrap;
     font-variant-numeric: tabular-nums; text-align: right; }
@@ -2333,6 +2330,8 @@ html, body { background: var(--bg); color: var(--ink); }
     --fl-cip-jos: 6px;         /* între chipuri și luna desenată */
     --fl-zi-d: 40px;           /* ziua în luna desenată: cercul văzut (ținta de 44 o cuprinde) */
     --fl-unelte-h: 48px;       /* bara de unelte a notei */
+    --fl-unelte-pas: calc(var(--tap) + var(--s-1));   /* pasul iconițelor din bara de jos a foii: 48, măsurat pe TickTick (captura din 18 nov), hotărât 18 nov */
+    --fl-unelte-min: 40px;   /* pasul cel mai strâns: pe ecranele înguste (360) încap toate cele 8 unelte fără derulare (18 nov) */
     --fl-unelte-aer: 6px;      /* marginile barei de unelte */
     --fl-nota-sus: 6px;        /* aerul de sus al notei de sub un grup */
   }
@@ -2478,6 +2477,9 @@ html, body { background: var(--bg); color: var(--ink); }
   /* sub ultimul card 8 și nu 20 (FF-G, 14 nov): foaia unui lucru gol rămâne sub 1/2 și pe S23 (T1); zona de gesturi a telefonului se adaugă tot,
      și locul tastaturii (`--ui-kb`, ca la foaia-formular): fără el câmpul de jos („Adaugă un pas”) nu putea fi derulat deasupra ei (P5, 14 nov) */
   .ui-sh[data-foaie=lucru] .ui-sh-b:last-child { padding-bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px) + var(--ui-kb, 0px)); }
+  /* foaia cu bara de unelte (18 nov): bara stă lipită la baza foii (`.k-ex-unelte`, frate al lui `.k-ex`), cu zona de gesturi în ea; sub ea rămâne doar locul tastaturii */
+  .ui-sh[data-foaie=lucru] .ui-sh-b:has(> .k-ex-unelte) { display: flex; flex-direction: column; justify-content: space-between; }   /* foaia sus, bara jos, oricât de înaltă e foaia */
+  .ui-sh[data-foaie=lucru] .ui-sh-b:last-child:has(> .k-ex-unelte) { padding-bottom: var(--ui-kb, 0px); }
   .k-fl-g { margin-bottom: var(--intre-carduri); }   /* între carduri: 12 (registrul, 17 nov: 12 · 16 · 24) */
   /* titlul grupului: 16 în card (la 16 de marginea cardului, aliniat cu textul de sub el), 24 deasupra literelor, 12 dedesubt */
   .k-fl-sec { margin: var(--grup-eticheta-sus) 0 var(--grup-eticheta-jos); padding: 0 var(--card-aer); color: var(--muted); font: 600 var(--t-13) / var(--lh-13) var(--f-body); }
@@ -2607,6 +2609,10 @@ html, body { background: var(--bg); color: var(--ink); }
      marginile cardurilor; numele nu se rupe pe două rânduri (rândul derulează dacă nu încape) */
   .k-fl-seg { margin: 0 0 var(--s-3); }
   .k-fl-r.nou-rand.cauta .k-fl-ic { color: var(--muted); }
+  /* căutarea dintr-o pagină a foii (Unde, Persoane, Etichete) e câmpul liber: capsula de 44, ca „Când” (registrul, 18 nov) */
+  .k-fl-r.nou-rand.cauta { min-height: var(--camp-liber); height: var(--camp-liber); }
+  .k-fl-r.nou-rand.cauta .k-fl-tf { min-height: 0; height: 100%; }   /* câmpul cât capsula (44), nu cât rândul de 52: nu iese din ea (18 nov) */
+  .k-fl-g:has(> .k-fl-card > .k-fl-r.nou-rand.cauta:only-child) .k-fl-card { border-radius: var(--r-pill); }
   /* pagina cu căutare (forma `pagina-cu-cautare`): grupurile ei stau ca ale oricărei pagini, fără un înveliș între */
   .k-fl-cautare { display: contents; }
   /* Participanți și Etichetă (fl_p-*): rânduri cu iconiță, ca restul foii; „Etichetă nouă” în accent */
@@ -2647,8 +2653,11 @@ html, body { background: var(--bg); color: var(--ink); }
 
   /* Foaia unică (4b-1, P6.5f; etalon `fl_e-*`): × · locul · ⋯ ✓; meniurile de sub rând, aliniate cu valoarea. Numele k-rz-*
      sunt rămase de la rezumat (datorie de nume, în Coada robusteții). */
-  .k-rz-h { grid-template-columns: var(--antet-buton) 1fr var(--antet-buton) var(--antet-buton); }
-  .k-rz-h > .k-fl-b:last-child { grid-column: 4; }
+  /* titlul („Azi ›”) pe centrul foii, sub mâner: coloane simetrice, două locuri de buton de fiecare parte (18 nov; azi stătea
+     cu ~24 la stânga: patru coloane, centrul doar între × și un loc gol) */
+  .k-rz-h { grid-template-columns: var(--antet-buton) var(--antet-buton) 1fr var(--antet-buton) var(--antet-buton); }
+  .k-rz-h > .k-rz-loc { grid-column: 3; }
+  .k-rz-h > .k-fl-b:last-child { grid-column: 5; }
   .k-rz-sp { display: block; }
   .ui-toast { pointer-events: auto; }
   /* mesajul (bifa, Anulează) stă pe foaie, iar foaia face loc sub ultimul rând cât el e pe ecran */
@@ -2704,16 +2713,18 @@ html, body { background: var(--bg); color: var(--ink); }
   /* „Finalizat azi la 11:32”, sub Detalii (fl_e-bifat) */
   .k-fl-fin { margin: var(--aer-optic) 0 0; color: var(--muted); font: 400 var(--t-15) / var(--lh-15) var(--f-body); }
 
-  /* plăcuțele câmpurilor opționale fără valoare (FF-P4a; registrul, 13 nov, seara): în cardul ultimului rând, sub o linie `--hair`,
-     aliniate la stânga, 8 între ele; fiecare `--row-2` înălțime și `--placuta-l` lățime, raza `--r-md`, fond `--pastila`, iconița 20
-     sus și numele 12 / 400 `--ink2` dedesubt (4 între ele). Numele nu se taie cu „…”: se estompează la capăt (`incape.js`). */
-  .k-ex-pls { position: relative; }
-  .k-ex-sir { display: flex; gap: var(--s-2); padding: var(--s-3) var(--card-aer); }   /* un singur rând, derulat lateral (`ui-sir`; Gabriel, 14 nov) */
-  .k-fl-r ~ .k-ex-pls::before { content: ""; position: absolute; top: 0; left: var(--card-aer); right: var(--card-aer); height: var(--linie); background: var(--hair); }
-  .k-ex-pl { position: relative; flex: none; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: var(--s-1); width: var(--placuta-l); min-height: var(--row-2); padding: 0 var(--aer-optic); border-radius: var(--r-md);
-    background: var(--pastila); color: var(--ink2); text-align: center; font: 400 var(--t-12) / var(--lh-12) var(--f-body); }
-  .k-ex-pl > span { max-width: 100%; overflow: hidden; white-space: nowrap; }
+  /* bara de unelte a foii (Gabriel, 18 nov: „ca TickTick”; înlocuiește plăcuțele din cardul „Când”, 13–14 nov): iconițele câmpurilor
+     opționale fără valoare, apoi agrafa, stinse (`--muted`; agrafa `--faint`, „Indisponibil”), fără fond și fără text, la pas fix
+     (`--fl-unelte-pas`, 48), la stânga, prima cu centrul pe axa iconițelor din carduri (16 + 10 de la cardul care e la 16 de ecran).
+     Lipită jos (`sticky`), pe fondul foii: conținutul derulat trece pe sub ea, iar foaia are loc pentru ea. Dacă nu încap, rândul
+     derulează lateral (`ui-sir`, marginea estompată unde continuă). Cât se scrie în notă, bara notei (`.k-fl-nota-un`) ia locul ei. */
+  .k-ex-unelte { position: sticky; bottom: 0; z-index: 2; margin: 0 calc(-1 * var(--s-4)); padding: var(--intre-carduri) 0 env(safe-area-inset-bottom, 0px); background: var(--k-fond); }
+  .k-ex:has(.k-fl-nota[data-scrie]) + .k-ex-unelte { visibility: hidden; }
+  .k-ex-sir { display: flex; padding-inline: calc(var(--s-4) + var(--card-aer) + (var(--ic-rand) - var(--fl-unelte-pas)) / 2) var(--s-4); }
+  .k-ex-pl { position: relative; flex: 0 1 var(--fl-unelte-pas); min-width: var(--fl-unelte-min); box-sizing: border-box; display: grid; place-items: center; width: var(--fl-unelte-pas); height: var(--fl-unelte-pas);
+    border-radius: var(--r-md); color: var(--muted); }
+  .k-ex-pl > .ui-i { width: var(--ic-rand); height: var(--ic-rand); }
+  .k-ex-agr { color: var(--faint); }
   .k-ex-pl:active { background: var(--apasat); }
 
   /* luna desenată (FF-P4b): zilele în cercuri; inițialele la fel ca în grila lunii */
@@ -2759,10 +2770,15 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-nota-ed:empty::before { content: attr(data-ph); color: var(--muted); }
   /* textul notei pe axa textului rândurilor (card + 16 + 20 + 12 = 48, ca la `.k-ex .k-fl-r`; FF-V2; axele 17 nov) */
   .k-ex .k-fl-nota { padding-left: var(--card-aer); }
-  .k-ex .k-fl-nota-ed { padding-left: calc(var(--ic-rand) + var(--s-3)); }
+  /* „Note” (Gabriel, 18 nov): bilețelul la 16 în stânga plutește pe primul rând; textul îl ocolește (12), apoi ia toată lățimea, de la 16
+     la 16. Agrafa nu mai e în rând: e ultima unealtă din bara foii (`.k-ex-unelte`) */
+  .k-ex .k-fl-nota { padding-right: var(--card-aer); }
+  .k-ex .k-fl-nota-ed { padding-inline: 0; }
+  .k-fl-nota-ic { display: flex; float: left; margin: calc(var(--s-3) + (var(--lh-16) - var(--ic-rand)) / 2) var(--s-3) 0 0; color: var(--muted); }
+  .k-fl-nota-un { clear: both; }
   .k-fl-nota-ed ul { margin: var(--aer-optic) 0; padding-left: var(--s-5); }
   .k-fl-nota-ed div, .k-fl-nota-ed p, .k-fl-nota-ed li { margin: 0; }
-  .k-fl-nota:not([data-scrie]) .k-fl-nota-ed[data-lung] { max-height: calc(2 * var(--s-3) + 3 * var(--lh-16)); overflow: hidden;
+  .k-fl-nota:not([data-scrie]) .k-fl-nota-ed[data-lung] { max-height: calc(2 * var(--s-3) + 3 * var(--lh-16)); overflow: clip;
     -webkit-mask-image: linear-gradient(#000 calc(100% - var(--lh-16) - var(--s-3)), transparent calc(100% - var(--s-3)));
     mask-image: linear-gradient(#000 calc(100% - var(--lh-16) - var(--s-3)), transparent calc(100% - var(--s-3))); }
   .k-fl-nota-un { display: none; }
@@ -3075,7 +3091,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-nt-cerc { display: block; box-sizing: border-box; width: var(--bifa-rand); height: var(--bifa-rand); border-radius: 50%;
     border: var(--bifa-contur) solid var(--cerc-contur); }
   /* meniul desenat: piesa `.k-meniu` (meniu.css: sticlă, raza 32, 250 lat, rânduri 42, linia de grup 24…24); aici doar locul
-     lui în fereastră (îl pune `pagina/notare/aseaza.js`) și derularea; textul, apoi iconița sau bifa în dreapta (`.dr`) */
+     lui în fereastră (îl pune `pagina/notare/aseaza.js`) și derularea; iconița în stânga, ca în orice meniu */
   .k-nt-meniu, .k-meniu.k-nt-meniu { position: absolute; z-index: 5; overscroll-behavior: contain; }
   /* rândurile derulează deasupra lui „Extinde” (fix jos); marginea de jos se estompează și o dungă subțire spune că mai
      sunt (desen `fl_n-plus`) */
