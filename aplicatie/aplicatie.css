@@ -2718,8 +2718,14 @@ html, body { background: var(--bg); color: var(--ink); }
      (`--fl-unelte-pas`, 48), la stânga, prima cu centrul pe axa iconițelor din carduri (16 + 10 de la cardul care e la 16 de ecran).
      Lipită jos (`sticky`), pe fondul foii: conținutul derulat trece pe sub ea, iar foaia are loc pentru ea. Dacă nu încap, rândul
      derulează lateral (`ui-sir`, marginea estompată unde continuă). Cât se scrie în notă, bara notei (`.k-fl-nota-un`) ia locul ei. */
-  .k-ex-unelte { position: sticky; bottom: 0; z-index: 2; margin: 0 calc(-1 * var(--s-4)); padding: var(--intre-carduri) 0 env(safe-area-inset-bottom, 0px); background: var(--k-fond); }
-  .k-ex:has(.k-fl-nota[data-scrie]) + .k-ex-unelte { visibility: hidden; }
+  /* la derulare și cu tastatura (specificația barei, 18 nov; `foaie-lucru/bara-unelte.js`): ascunsă, bara își strânge înălțimea (conținutul ia
+     locul ei odată cu mișcarea), iar rândul dinăuntru coboară cu marginea ei de sus, tăiat de baza foii; o schimbare la jumătate se întoarce de unde a
+     ajuns (tranziția CSS); revenind, se poate atinge de la început (`visibility` se schimbă pe loc), ascunsă nu se mai atinge (la capătul mișcării) */
+  .k-ex-unelte { position: sticky; bottom: 0; z-index: 2; flex: none; overflow: hidden; margin: 0 calc(-1 * var(--s-4)); background: var(--k-fond);
+    height: calc(var(--intre-carduri) + var(--fl-unelte-pas) + env(safe-area-inset-bottom, 0px)); transition: height var(--dur-iese) var(--arc-iese), visibility 0s; }
+  .k-ex-unelte-i { padding: var(--intre-carduri) 0 env(safe-area-inset-bottom, 0px); }
+  .ui-sh:is([data-bara-ascunsa], [data-bara-tastatura]) .k-ex-unelte { height: 0; visibility: hidden; transition: height var(--dur-iese) var(--arc-iese), visibility 0s var(--dur-iese); }
+  @media (prefers-reduced-motion: reduce) { .k-ex-unelte, .ui-sh:is([data-bara-ascunsa], [data-bara-tastatura]) .k-ex-unelte { transition: none; } }
   .k-ex-sir { display: flex; padding-inline: calc(var(--s-4) + var(--card-aer) + (var(--ic-rand) - var(--fl-unelte-pas)) / 2) var(--s-4); }
   .k-ex-pl { position: relative; flex: 0 1 var(--fl-unelte-pas); min-width: var(--fl-unelte-min); box-sizing: border-box; display: grid; place-items: center; width: var(--fl-unelte-pas); height: var(--fl-unelte-pas);
     border-radius: var(--r-md); color: var(--muted); }
