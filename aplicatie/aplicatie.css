@@ -2658,7 +2658,9 @@ html, body { background: var(--bg); color: var(--ink); }
   /* titlul („Azi ›”) pe centrul foii, sub mâner: coloane simetrice, două locuri de buton de fiecare parte (18 nov; azi stătea
      cu ~24 la stânga: patru coloane, centrul doar între × și un loc gol) */
   .k-rz-h { grid-template-columns: var(--antet-buton) var(--antet-buton) 1fr var(--antet-buton) var(--antet-buton); }
-  .k-rz-h > .k-rz-loc { grid-column: 3; }
+  /* cât textul, nu toată coloana, și 32 în înălțime, nu 44 (Gabriel, 19 nov: ținta lui intra în mâner; 32 e peste minimul de 24 al WCAG 2.2 AA):
+     atingerea de lângă mâner nu-l mai prinde */
+  .k-rz-h > .k-rz-loc { grid-column: 3; justify-self: center; align-self: center; min-height: var(--s-8); padding-inline: var(--s-2); }
   .k-rz-h > .k-fl-b:last-child { grid-column: 5; }
   .k-rz-sp { display: block; }
   .ui-toast { pointer-events: auto; }
