@@ -2921,6 +2921,8 @@ html, body { background: var(--bg); color: var(--ink); }
     padding: 0; border: 0; background: none; color: var(--muted); }
   /* cercul văzut e `--buton-cerc` (40) în ținta `--antet-buton` (44) */
   /* ⋯ stă fix în colțul de sus al fișei, pe axa primului rând al titlului, oricâte rânduri are titlul (Gabriel, 19 nov, 00:28: cobora cu un titlu pe două rânduri) */
+  /* titlul e butonul care deschide foaia (19 nov): arată ca textul titlului */
+  .k-fi-tb { display: inline; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; }
   .k-fi-cap > .k-fi-pct { align-self: flex-start; margin-top: calc((var(--lh-22) - var(--antet-buton)) / 2); }
   .k-fi-pct::before { content: ''; position: absolute; inset: calc((var(--antet-buton) - var(--buton-cerc)) / 2); border-radius: 50%;
     background: var(--pastila); }
