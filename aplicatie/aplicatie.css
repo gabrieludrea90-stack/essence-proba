@@ -399,7 +399,7 @@ html, body { background: var(--bg); color: var(--ink); }
      (Gabriel, 10 nov, captura de la 13:24); tragerea în jos e a ei (`useGestul`) */
   .ui-sh[data-foaie=lucru] { overscroll-behavior-y: none; }
   .ui-sh[data-niveluri="1"] { height: var(--sh-inaltime, var(--sh-jumatate)); }
-  .ui-sh[data-niveluri="2"] { height: var(--sh-doua-treimi); }
+  .ui-sh[data-niveluri="2"] { height: var(--sh-inaltime, var(--sh-doua-treimi)); }   /* sub ultimul card întreg din 2/3 (foaie.js, 18 nov) */
   .ui-sh[data-trage], .ui-sh[data-trage] :is(.k-fl-r.pas, textarea) { touch-action: none; }   /* orice câmp de scris: are derularea lui (Detaliile, 10 nov) */
   .ui-sh[data-inghetat] { overflow-y: hidden; }
   /* mânerul și antetul fix sunt locul de prins foaia și pe tot ecranul: tragerea lor în jos o coboară, nu derulează */
@@ -2477,7 +2477,7 @@ html, body { background: var(--bg); color: var(--ink); }
   /* sub ultimul card 8 și nu 20 (FF-G, 14 nov): foaia unui lucru gol rămâne sub 1/2 și pe S23 (T1); zona de gesturi a telefonului se adaugă tot,
      și locul tastaturii (`--ui-kb`, ca la foaia-formular): fără el câmpul de jos („Adaugă un pas”) nu putea fi derulat deasupra ei (P5, 14 nov) */
   .ui-sh[data-foaie=lucru] .ui-sh-b:last-child { padding-bottom: calc(var(--s-2) + env(safe-area-inset-bottom, 0px) + var(--ui-kb, 0px)); }
-  /* foaia cu bara de unelte (18 nov): bara stă lipită la baza foii (`.k-ex-unelte`, frate al lui `.k-ex`), cu zona de gesturi în ea; sub ea rămâne doar locul tastaturii */
+  /* foaia cu bara de unelte (18 nov): bara e ultimul element, la baza foii (`.k-ex-unelte`, frate al lui `.k-ex`), cu zona de gesturi în ea; sub ea rămâne doar locul tastaturii */
   .ui-sh[data-foaie=lucru] .ui-sh-b:has(> .k-ex-unelte) { display: flex; flex-direction: column; justify-content: space-between; }   /* foaia sus, bara jos, oricât de înaltă e foaia */
   .ui-sh[data-foaie=lucru] .ui-sh-b:last-child:has(> .k-ex-unelte) { padding-bottom: var(--ui-kb, 0px); }
   .k-fl-g { margin-bottom: var(--intre-carduri); }   /* între carduri: 12 (registrul, 17 nov: 12 · 16 · 24) */
@@ -2716,22 +2716,13 @@ html, body { background: var(--bg); color: var(--ink); }
   /* bara de unelte a foii (Gabriel, 18 nov: „ca TickTick”; înlocuiește plăcuțele din cardul „Când”, 13–14 nov): iconițele câmpurilor
      opționale fără valoare, apoi agrafa, stinse (`--muted`; agrafa `--faint`, „Indisponibil”), fără fond și fără text, la pas fix
      (`--fl-unelte-pas`, 48), la stânga, prima cu centrul pe axa iconițelor din carduri (16 + 10 de la cardul care e la 16 de ecran).
-     Lipită jos (`sticky`), pe fondul foii: conținutul derulat trece pe sub ea, iar foaia are loc pentru ea. Dacă nu încap, rândul
+     La capătul foii, pe fondul ei (fără `sticky`: conținutul nu trece pe sub ea). Dacă nu încap, rândul
      derulează lateral (`ui-sir`, marginea estompată unde continuă). Cât se scrie în notă, bara notei (`.k-fl-nota-un`) ia locul ei. */
-  /* la derulare și cu tastatura (specificația barei, 18 nov; `foaie-lucru/bara-unelte.js`): ascunsă, bara își strânge înălțimea (`.k-ex-unelte-c`;
-     conținutul ia locul ei odată cu mișcarea), iar rândul dinăuntru coboară cu marginea ei de sus, tăiat de baza foii; o schimbare la jumătate se
-     întoarce de unde a ajuns (tranziția CSS); revenind, se poate atinge de la început (`visibility` se schimbă pe loc), ascunsă nu se mai atinge.
-     Cât mai e conținut sub ea (`data-bara-continua`), conținutul se stinge deasupra ei (`--incape-estompare`), nu e retezat prin mijlocul unui rând
-     (Gabriel, 18 nov, captura de la 23:02); la capătul derulării, nu: ultimul câmp se vede întreg */
-  .k-ex-unelte { position: sticky; bottom: 0; z-index: 2; flex: none; margin: 0 calc(-1 * var(--s-4)); }
-  .k-ex-unelte::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: var(--incape-estompare); pointer-events: none;
-    background: linear-gradient(to bottom, transparent, var(--k-fond)); opacity: 0; transition: opacity var(--dur-iese) var(--arc-iese); }
-  .ui-sh[data-bara-continua]:not([data-bara-ascunsa], [data-bara-tastatura]) .k-ex-unelte::before { opacity: 1; }
-  .k-ex-unelte-c { overflow: hidden; background: var(--k-fond);
-    height: calc(var(--intre-carduri) + var(--fl-unelte-pas) + env(safe-area-inset-bottom, 0px)); transition: height var(--dur-iese) var(--arc-iese), visibility 0s; }
-  .k-ex-unelte-i { padding: var(--intre-carduri) 0 env(safe-area-inset-bottom, 0px); }
-  .ui-sh:is([data-bara-ascunsa], [data-bara-tastatura]) .k-ex-unelte-c { height: 0; visibility: hidden; transition: height var(--dur-iese) var(--arc-iese), visibility 0s var(--dur-iese); }
-  @media (prefers-reduced-motion: reduce) { .k-ex-unelte::before, .k-ex-unelte-c, .ui-sh:is([data-bara-ascunsa], [data-bara-tastatura]) .k-ex-unelte-c { transition: none; } }
+  /* ultimul element al foii (Gabriel, 18 nov, seara, după încercările cu ascunderea la derulare, estomparea, linia și piesele separate:
+     „rămân fixe în partea de jos a paginii, fără cod complicat; nu se mai derulează nimic prin ele”): nu e lipită, deci niciun rând nu
+     trece pe sub ea; în foaia scurtă urmează conținutul, în foaia pe tot ecranul stă la baza ei; la o foaie lungă se ajunge derulând */
+  .k-ex-unelte { flex: none; margin: 0 calc(-1 * var(--s-4)); padding: var(--intre-carduri) 0 env(safe-area-inset-bottom, 0px); background: var(--k-fond); }
+  .k-ex:has(.k-fl-nota[data-scrie]) + .k-ex-unelte { visibility: hidden; }
   .k-ex-sir { display: flex; padding-inline: calc(var(--s-4) + var(--card-aer) + (var(--ic-rand) - var(--fl-unelte-pas)) / 2) var(--s-4); }
   .k-ex-pl { position: relative; flex: 0 1 var(--fl-unelte-pas); min-width: var(--fl-unelte-min); box-sizing: border-box; display: grid; place-items: center; width: var(--fl-unelte-pas); height: var(--fl-unelte-pas);
     border-radius: var(--r-md); color: var(--muted); }
