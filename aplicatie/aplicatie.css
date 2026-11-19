@@ -2662,6 +2662,8 @@ html, body { background: var(--bg); color: var(--ink); }
      atingerea de lângă mâner nu-l mai prinde */
   .k-rz-h > .k-rz-loc { grid-column: 3; justify-self: center; align-self: center; min-height: var(--s-8); padding-inline: var(--s-2); }
   .k-rz-h > .k-fl-b:last-child { grid-column: 5; }
+  /* foaia deschisă din notare (⤢) are și ✓: ⋯ stă lângă el, „× · ⋯ ✓” (S23, 19 nov: cădea pe coloana titlului, în stânga) */
+  .k-rz-h > .k-fl-b:has(+ .k-fl-ok) { grid-column: 4; }
   .k-rz-sp { display: block; }
   .ui-toast { pointer-events: auto; }
   /* mesajul (bifa, Anulează) stă pe foaie, iar foaia face loc sub ultimul rând cât el e pe ecran */
