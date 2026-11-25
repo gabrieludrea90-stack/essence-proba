@@ -678,7 +678,8 @@ html, body { background: var(--bg); color: var(--ink); }
   }
   .sc-bara-k { display: contents; }
   body:has(.k-bara) { --sc-bara: 76px; }
-  body:has(.k-bara) .sc-ecran { padding-bottom: calc(var(--sc-corp-jos) + env(safe-area-inset-bottom, 0px)); }
+  /* tastatura sus (`--ui-kb`, 0 pe S23) adaugă loc sub pagină: rândul în care scrii poate urca deasupra ei chiar la capătul paginii */
+  body:has(.k-bara) .sc-ecran { padding-bottom: calc(var(--sc-corp-jos) + env(safe-area-inset-bottom, 0px) + var(--ui-kb, 0px)); }
 }
 
 /* Cărămizile A · rândul, grupul, rândul punctat (src/ecran/caramizi/randuri.js). Doar tokenuri; clasele k-.
@@ -1827,7 +1828,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-o > span { font-size: var(--t-14); line-height: var(--lh-13); font-weight: 400; color: var(--muted); }
   .k-z-s { display: flex; justify-content: center; align-self: stretch; position: relative; }
   .k-z-t { min-width: 0; }
-  .k-z-ti { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
+  /* titlul unui rând: cel mult două rânduri, în Ziua și în lista Standard (`.k-lp-ti`; modul C, A11) */
+  .k-z-ti, .k-lp-ti { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
     font-size: var(--t-16); line-height: var(--lh-16); font-weight: 500; color: var(--ink); }
   .k-z-sub { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1); min-height: var(--lh-13); /* rândul cu doar ↻ sau steag are tot linia de text: 56, nu 52 (18 nov) */ font-size: var(--t-13); line-height: var(--lh-13);
     color: var(--muted); }
@@ -2871,6 +2873,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fl-cerc.culoare[aria-checked="true"] { box-shadow: inset 0 0 0 var(--fl-inel) var(--c); }
   .k-fl-cerc.culoare[aria-checked="true"]::before { width: var(--fl-culoare-ales); height: var(--fl-culoare-ales); }
   .k-fl-cerc.pictograma[aria-checked="true"] { background: var(--pastila); color: var(--ink); box-shadow: inset 0 0 0 var(--fl-inel) var(--accent); }
+  /* foaia „Adaugă din” / „Mută în” / „Adaugă în” (23 nov, 19:09): rândurile din cardul foii, nu din cel al paginii Liste (marginea o dă foaia) */
+  .k-foaie-liste .k-lp-gr { margin: 0; background: var(--k-grup); }
   .k-fl-cerc:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* zilele săptămânii din Personalizat (FF-L): șapte cercuri pe un rând, inițiala în cerc, cele alese pline în accent */
   .k-fl-cercuri.multe { grid-template-columns: repeat(7, 1fr); gap: 0; padding: var(--s-2) var(--s-1); }
@@ -3329,6 +3333,10 @@ html, body { background: var(--bg); color: var(--ink); }
     --lp-nd-gap: 6px;          /* între dată și text în notiță */
     --lp-inv-jos: 10px;        /* între invitații și sub răspunsuri */
     --lp-rb-h: 36px;           /* răspunsul la invitație: Particip · Poate · Nu */
+    --lp-fade: 85%;            /* de unde se estompează titlul lung al secțiunii (ca începutul notiței) */
+    --lp-sec-sus: 4px;         /* aerul de sub linia dintre secțiuni până la titlu: titlul de 44 stă pe linia rândurilor */
+    --lp-apasat: .7;           /* titlul secțiunii apăsat: ca ‹ și chipul (același .7 al paginilor Liste, nu un jeton global) */
+    --lp-ridicat-z: 3;         /* rândul ținut sau tras stă peste vecinii care alunecă; local listei, sub antet (`--z-cap`) */
   }
   /* ——— antetul paginii: săgeata rotundă 44 (fără text), titlul 20/600, pastila la dreapta ——— */
   /* aerul de sub titlu (piesa 6): B = `--bara-dupa` de la linia literelor (la ~`--s-4` deasupra fundului rândului butoanelor) până la
@@ -3373,6 +3381,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lp-lr .k-lp-bu { width: var(--bula-rand); height: var(--bula-rand); margin-inline: calc((var(--ic-rand) - var(--bula-rand)) / 2); }
   .k-lp-lr .k-lp-bu > svg { width: var(--ic-mica); height: var(--ic-mica); }
   .k-lp-lr + .k-lp-lr::before { content: ""; position: absolute; top: 0; left: var(--text-dupa-ic); right: var(--rand-linie-dr); height: var(--linie); background: var(--hair); }
+  /* grupurile unei alegeri („Mută în”): linia grupurilor, ca în meniuri (`--line`, de la `--meniu-linie-inset` la `--meniu-linie-inset`); bifa e a alegerii unice */
+  .k-lp-gp { position: relative; }
+  .k-lp-gp + .k-lp-gp::before { content: ""; position: absolute; top: 0; inset-inline: var(--meniu-linie-inset); height: var(--linie); background: var(--line); }
+  .k-lp-cv.ales { color: var(--accent); }
   .k-lp-lt { font: 500 var(--t-16) / var(--lh-16) var(--f-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .k-lp-ln { font: 400 var(--t-16) / var(--lh-16) var(--f-body); color: var(--muted); font-variant-numeric: tabular-nums; }
   .k-lp-cv { display: flex; color: var(--faint); }
@@ -3392,6 +3404,58 @@ html, body { background: var(--bg); color: var(--ink); }
     padding: 0 var(--s-2); border: 0; background: none; color: var(--accent); font: 600 var(--t-13) var(--f-body); text-align: right; }
   .k-lp-sa:active { transform: none; opacity: .6; }
 
+  /* titlul paginii cu progres („2 din 11 finalizate”): titlul și sub el rândul stins, în aceeași coloană */
+  .k-ap-tt { flex: 1; min-width: 0; }
+  .k-ap-tt .k-ap-t { padding-right: 0; }
+  .k-ap-s { display: block; padding: 0 var(--s-2) 0 var(--s-3); overflow: hidden; white-space: nowrap; color: var(--muted);
+    font: 400 var(--t-13) / var(--lh-13) var(--f-body); font-variant-numeric: tabular-nums; }
+
+  /* lista Standard (L2a): fără linii între rânduri; linie subțire doar între secțiuni, pe lățimea dintre marginile de 16 */
+  .k-lp-std .k-r + .k-r > .k-lp-r::before { content: none; }
+  .k-lp-ss::before { content: ""; display: block; height: var(--linie); margin: var(--s-2) var(--s-4) var(--lp-sec-sus); background: var(--line); }
+  .k-lp-sh { position: relative; margin: 0; font: inherit; }
+  /* acțiunea cititorului de ecran pe titlu („Opțiuni pentru secțiune”): același meniu ca ținutul apăsat, fără înfățișare */
+  .k-lp-vo { position: absolute; top: 0; left: 0; width: var(--linie); height: var(--linie); margin: 0; padding: 0; border: 0; overflow: hidden;
+    opacity: 0; }
+  .k-lp-st { display: flex; align-items: center; gap: var(--s-2); width: 100%; min-height: var(--tap); margin: 0; padding: 0 var(--s-4);
+    border: 0; background: none; color: var(--ink); font: 600 var(--t-17) / var(--lh-17) var(--f-body); text-align: left;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .k-lp-st:active { transform: none; opacity: var(--lp-apasat); }
+  .k-lp-sn { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; -webkit-mask: linear-gradient(90deg, #000 var(--lp-fade), transparent);
+    mask: linear-gradient(90deg, #000 var(--lp-fade), transparent); }
+  .k-lp-sc { flex: none; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); font-variant-numeric: tabular-nums; }
+  .k-lp-st > svg { flex: none; color: var(--muted); }
+  .k-lp-ss[data-gol] .k-lp-sn { color: var(--muted); font-weight: 400; }
+  .k-lp-sin { display: block; width: 100%; min-height: var(--tap); margin: 0; padding: 0 var(--s-4); border: 0; outline: 0; background: none; color: var(--ink);
+    font: 600 var(--t-17) / var(--lh-17) var(--f-body); }
+  .k-lp-sin::placeholder { color: var(--faint); font-weight: 400; }
+  .k-lp-er { margin: 0 var(--s-4) var(--s-2); color: var(--rosu-text); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+  /* rândul „Adaugă”: 44, „+” pe axa cercurilor, textul pe axa titlurilor */
+  .k-fl-r.k-lp-nou { min-height: var(--tap); padding: 0 var(--s-4); }
+  .k-fl-r.k-lp-nou .k-fl-tf { min-height: var(--tap); }
+  /* desfăcută, secțiunea își arată rândurile de unde au plecat; bifatul iese în sus (transform și clip-path, nu înălțime) */
+  .k-lp-mut { animation: k-lp-desface var(--dur-2) var(--arc) both; }
+  @keyframes k-lp-desface { from { clip-path: inset(0 0 100% 0); } }
+  .k-lp-iese { animation: k-lp-strange var(--dur-1) var(--arc-iese) forwards; }
+  @keyframes k-lp-strange { to { transform: translateY(calc(var(--s-2) * -1)); opacity: 0; } }
+  .k-lp-pleaca { animation: k-lp-pleaca var(--dur-2) var(--arc-pleaca) forwards; }
+  @keyframes k-lp-pleaca { to { clip-path: inset(0 0 100% 0); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .k-lp-mut, .k-lp-iese, .k-lp-pleaca { animation: none; } }
+  .k-lp-fin .k-lp-sn { font-weight: 600; }
+  /* tragerea unui rând (L2c, `aplicatie/liste-trage.js`): rândul ridicat urmează degetul pe fondul rândului ales, cu umbra
+     `--sh-2`; restul alunecă să lase locul liber sub deget (doar `transform`); titlul pliat care primește rândul se aprinde pe
+     același fond; la Mișcare redusă, fără alunecare. `[data-ridicat]` e și starea „ținut” a rândurilor din Ziua (`glisare.js`) */
+  .k-r[data-ridicat], [data-gl][data-ridicat] { position: relative; z-index: var(--lp-ridicat-z); box-shadow: var(--sh-2); transition: none; }
+  /* la întuneric `--surface2` abia se deosebește de `--surface`: acolo rândul ridicat ia treapta `--ridicat` (modul C, 25 nov) */
+  .k-r[data-ridicat] > .k-rand, [data-gl][data-ridicat] > .k-rand { background: light-dark(var(--surface2), var(--ridicat)); }
+  .k-lp-std[data-trage] .k-r:not([data-ridicat]), .k-lp-std[data-trage] .k-lp-sh, .k-lp-std[data-trage] .k-lp-nou,
+  .k-lp-std[data-trage] .k-lp-ss { transition: transform var(--dur-1) var(--arc); }
+  .k-lp-ss[data-tinta] > .k-lp-sh { background: var(--surface2); }
+  @media (prefers-reduced-motion: reduce) {
+    .k-lp-std[data-trage] .k-r:not([data-ridicat]), .k-lp-std[data-trage] .k-lp-sh, .k-lp-std[data-trage] .k-lp-nou,
+    .k-lp-std[data-trage] .k-lp-ss { transition: none; }
+  }
+
   /* rândul unei liste: [semn 22] [titlu · subtitlu] [valoare] */
   .k-rand.k-lp-r { display: block; min-height: 0; padding: 0; background: var(--surface); }
   .k-lp-r::after { display: none; }
@@ -3403,7 +3467,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-r:has(> .k-lp-r > .k-lp-c:active) { background: var(--surface2); }
   .k-lp-s { display: flex; justify-content: center; align-items: center; height: var(--lh-16); color: var(--cerc-contur); }
   .k-lp-t { display: block; min-width: 0; align-self: center; }
-  .k-lp-ti { display: block; overflow-wrap: anywhere; font: 500 var(--t-16) / var(--lh-16) var(--f-body); color: var(--ink); }
+  .k-lp-ti { font: 500 var(--t-16) / var(--lh-16) var(--f-body); color: var(--ink); }
   .k-lp-d { position: relative; top: var(--lp-optic-fin); align-self: center; padding-left: var(--s-3); font: 400 var(--t-13) / var(--lh-13) var(--f-body); color: var(--muted);
     white-space: nowrap; font-variant-numeric: tabular-nums; }
   .k-lp-r > .k-cerc { position: absolute; z-index: 2; margin: 0; top: calc(var(--kz-rp) + (var(--lh-16) - var(--tap)) / 2);
@@ -3412,6 +3476,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lp-1 .k-lp-c { align-items: center; }
   .k-r + .k-r > .k-lp-r::before { content: ""; position: absolute; top: 0; left: 50px; right: var(--rand-linie-dr); height: var(--linie); background: var(--hair); }
   .k-lp-r { position: relative; }
+  /* în selecție: rândul ales pe fondul rândului ales, fără meniul de copiere la ținut apăsat */
+  .k-rand.k-lp-r[data-sel] { background: var(--surface2); }
+  .k-lp-r[data-deja] { opacity: var(--stins); }
+  body[data-selectie] .k-lp-r { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .k-lp-facut .k-lp-ti { color: var(--muted); font-weight: 400; text-decoration: line-through; text-decoration-color: var(--faint); }
   .k-lp-facut .k-lp-s { color: var(--faint); }
 
@@ -3538,7 +3606,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-sl-h .k-sl-a:last-child { text-align: right; }
   .k-sl-le { min-width: var(--tap); height: var(--tap); padding: 0 var(--s-2); text-align: right; font: 600 var(--t-15) / var(--lh-15) var(--f-body);
     margin: calc((var(--tap) - var(--lh-15)) / -2) calc(var(--s-2) * -1) calc((var(--tap) - var(--lh-15)) / -2) 0; }
-  .k-sl-bar .k-bara-file { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .k-sl-bar .k-bara-file { grid-template-columns: repeat(var(--sl-n), minmax(0, 1fr)); }
   .k-sl-bar .k-fila { color: var(--ink2); }   /* acțiunile barei: eticheta ink2, iconița accent (desenul `sl_selectie`) */
   .k-sl-bar .k-fila svg { color: var(--accent); }
   .k-sl-bar .k-fila[data-ton="ros"], .k-sl-bar .k-fila[data-ton="ros"] svg { color: var(--rosu-text); }
