@@ -512,9 +512,15 @@ html, body { background: var(--bg); color: var(--ink); }
     -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--incape-estompare)), transparent);
     mask-image: linear-gradient(to right, #000 calc(100% - var(--incape-estompare)), transparent);
   }
+  /* pe mai multe rânduri: rândurile de sus întregi, pe ultimul doar capătul textului (`--ui-capat`, pus de incape.js),
+     pe aceeași `--incape-estompare` ca pe un rând (Gabriel, 25 nov: nu tot rândul) */
   [data-taiat="jos"] {
-    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1lh), transparent);
-    mask-image: linear-gradient(to bottom, #000 calc(100% - 1lh), transparent);
+    --ui-jos: linear-gradient(to right, #000 calc(var(--ui-capat, 100%) - var(--incape-estompare)), transparent var(--ui-capat, 100%));
+    -webkit-mask-image: linear-gradient(#000, #000), var(--ui-jos);
+    mask-image: linear-gradient(#000, #000), var(--ui-jos);
+    -webkit-mask-size: 100% calc(100% - 1lh), 100% 1lh; mask-size: 100% calc(100% - 1lh), 100% 1lh;
+    -webkit-mask-position: 0 0, 0 100%; mask-position: 0 0, 0 100%;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   }
   /* un rând care derulează lateral (`ui-sir`; incape.js pune `data-ov`): marginea se estompează doar unde rândul continuă,
      cu aceeași `--incape-estompare` */
@@ -1659,6 +1665,11 @@ html, body { background: var(--bg); color: var(--ink); }
     background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 88%, transparent));
   }
   .k-bara > * { pointer-events: auto; }
+  /* cât tastatura e sus bara (cu „+”) nu se vede și nu se atinge, în toată aplicația (registrul, 25 nov, 12:25 (3)); atributul îl pune
+     `tastatura.js`, singurul loc al regulii; fără animație (bara n-are tranziție proprie). Nu `visibility: hidden`: focusul
+     întors pe „Notează” la închiderea foii ar cădea pe `body` (butoanele rămân focusabile, doar invizibile și neatinse) */
+  :root[data-tastatura] .k-bara { opacity: 0; }
+  :root[data-tastatura] .k-bara > * { pointer-events: none; }
   .k-bara-file {
     flex: 1 1 0;
     min-width: 0;
@@ -1828,9 +1839,10 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-z-o > span { font-size: var(--t-14); line-height: var(--lh-13); font-weight: 400; color: var(--muted); }
   .k-z-s { display: flex; justify-content: center; align-self: stretch; position: relative; }
   .k-z-t { min-width: 0; }
-  /* titlul unui rând: cel mult două rânduri, în Ziua și în lista Standard (`.k-lp-ti`; modul C, A11) */
-  .k-z-ti, .k-lp-ti { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
-    font-size: var(--t-16); line-height: var(--lh-16); font-weight: 500; color: var(--ink); }
+  /* titlul unui rând: cel mult două rânduri, în Ziua și în lista Standard (`.k-lp-ti`; modul C, A11); fără „…” (limbaj: „nu se taie cu
+     «…»: se estompează”; 25 nov, 12:25 (4)): o singură regulă, `ui-randuri` din `incape.js` (clasa o pun `zi-rand.js`, `liste-rand.js`,
+     `sterse.js`); înălțimea, tăierea și masca (ultimul rând vizibil, doar când textul chiar e tăiat: `data-taiat="jos"`) vin de acolo */
+  .k-z-ti, .k-lp-ti { overflow-wrap: anywhere; font-size: var(--t-16); line-height: var(--lh-16); font-weight: 500; color: var(--ink); }
   .k-z-sub { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1); min-height: var(--lh-13); /* rândul cu doar ↻ sau steag are tot linia de text: 56, nu 52 (18 nov) */ font-size: var(--t-13); line-height: var(--lh-13);
     color: var(--muted); }
   .k-z-d { padding-left: var(--s-3); font-size: var(--t-13); line-height: var(--lh-16); color: var(--muted); white-space: nowrap;
@@ -1925,7 +1937,7 @@ html, body { background: var(--bg); color: var(--ink); }
   }
   @media (max-width: 359px) {
     .k-z-gol .k-z-lb { display: none; }
-    .k-z-gol .k-z-ti { white-space: nowrap; -webkit-line-clamp: 1; mask: linear-gradient(90deg, #000 80%, transparent); }
+    .k-z-gol .k-z-ti { white-space: nowrap; }
     /* ce stă în dreapta (durata, minutele de conflict) coboară sub titlu, ca titlul să aibă toată lățimea (ca în desen);
        etapele și ferestrele rămân pe un rând */
     .k-z-r:not(.k-z-gol, .k-z-et, .k-z-fara) .k-z-o, .k-z-r:not(.k-z-gol, .k-z-et, .k-z-fara) .k-z-s { grid-row: 1 / 3; }
@@ -2288,11 +2300,11 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-ca-s .k-z-bara { width: var(--bara-om-l); height: var(--ca-bara-h); border-radius: var(--bara-om-colt); background: var(--accent); }
   .k-ca-ic[data-ton="chihlimbar"] { color: var(--chihlimbar); }
   .k-ca-t { min-width: 0; display: block; }
-  .k-ca-t b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 var(--t-16) / var(--lh-16) var(--f-body); }
+  .k-ca-t b { display: block; font: 500 var(--t-16) / var(--lh-16) var(--f-body); }
   .k-ca-t b em { font-style: normal; font-weight: 600; }
   .k-ca-sc .k-ca-t b { font-weight: 400; }
   .k-ca-sc[aria-disabled="true"] { opacity: .5; }
-  .k-ca-t small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 var(--t-13) / var(--lh-13) var(--f-body); color: var(--muted); }
+  .k-ca-t small { font: 400 var(--t-13) / var(--lh-13) var(--f-body); color: var(--muted); }
   .k-ca-r[data-trecut] .k-ca-t b, .k-ca-r[data-trecut] .k-ca-t b em { color: var(--muted); }
   .k-ca-r[data-trecut] .k-ca-t b { font-weight: 400; }
   .k-ca-r[data-trecut] .k-ca-t b em { font-weight: 600; }
@@ -2694,7 +2706,8 @@ html, body { background: var(--bg); color: var(--ink); }
   /* ⋯ al foii unice: piesa meniului (`.k-meniu`, meniu.css: sticlă, raza 32, rânduri 42, linia de grup 24…24; rândurile le face
      `foaie-extinsa.js`), sub antet, cu marginea dreaptă la 16 de marginea ecranului (fl_e-puncte); ancora stă deja în chenarul de 16
      al foii, deci `right: 0` */
-  .k-ex-ancora .k-rz-meniu { top: 0; bottom: auto; left: auto; right: 0; max-height: calc(7 * var(--row-meniu)); }
+  .k-ex-ancora .k-rz-meniu { top: 0; bottom: auto; left: auto; right: 0; max-height: calc(100dvh - 2 * var(--antet-buton)); overflow-y: auto; }
+  /* fără limită de rânduri (registrul, 25 nov, 13:30): cât încape sub antet, apoi derulează */
   .k-ex .k-fl-r.act { grid-template-columns: var(--ic-rand) auto minmax(0, 1fr); }
   /* capul foii nu e card (desenul): semnul pe axa de 40, titlul și Detaliile pe axa de 62; bara programării cât capul */
   /* titlul coboară 8 px sub butoane: cercul, pe axa lui ×, nu se mai lipește de el (Gabriel, 8 nov, 20:21) */
@@ -2922,8 +2935,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fi-cap .k-z-sg { margin: 0; }
   .k-fi-tc { flex: 1; min-width: 0; }
   .k-fi-tr { display: flex; align-items: flex-start; gap: var(--s-2); }
-  .k-fi-t { margin: 0; min-width: 0; overflow-wrap: anywhere; font: 600 var(--t-22) / var(--lh-22) var(--f-body); color: var(--ink);
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  .k-fi-t { margin: 0; min-width: 0; overflow-wrap: anywhere; font: 600 var(--t-22) / var(--lh-22) var(--f-body); color: var(--ink); }
+  /* titlul întreg în fișă, oricât de lung (cel mult 200 de litere, `TITLU_MAX`; Gabriel, 25 nov) */
   .k-fl-steag { flex: none; margin-top: var(--fi-steag-sus); }
   .k-feci .k-fi-t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
   .k-fi-d { margin: 0; color: var(--muted); font: 400 var(--t-16) / var(--lh-16) var(--f-body); overflow-wrap: anywhere; }
@@ -2978,15 +2991,15 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fi-r.nota { align-items: flex-start; }
   .k-fi-r.nota .k-fi-sg { min-height: var(--lh-16); }
   .k-fi-nt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-  .k-fi-nc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
-  .k-fi-r.nota.desfacut .k-fi-nc { display: block; overflow: visible; }
+  .k-fi-nc { --ui-randuri: 3; } /* trei rânduri, restul estompat (`ui-randuri`, `incape.js`) */
+  .k-fi-r.nota.desfacut .k-fi-nc { overflow: visible; max-height: none; }
   .k-fi-nr { display: block; }
   .k-fi-nr.lista { display: flex; gap: var(--s-2); }
   .k-fi-nr .b { font-weight: 700; }
   .k-fi-nr .i { font-style: italic; }
   .k-fi-mai { display: none; min-height: var(--tap); margin: calc(var(--s-2) * -1) 0 calc(var(--s-3) * -1); padding: 0; border: 0;
     background: none; color: var(--accent); font: 400 var(--t-16) / var(--lh-16) var(--f-body); }
-  .k-fi-r.nota[data-taiat] .k-fi-mai { display: block; }
+  .k-fi-nt:has(> .k-fi-nc[data-taiat]) > .k-fi-mai { display: block; }
 
   /* semnătura: lipită jos, mică și stinsă; ochiul în dreapta, fără text */
   .k-fi-sem { flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
@@ -3385,7 +3398,7 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lp-gp { position: relative; }
   .k-lp-gp + .k-lp-gp::before { content: ""; position: absolute; top: 0; inset-inline: var(--meniu-linie-inset); height: var(--linie); background: var(--line); }
   .k-lp-cv.ales { color: var(--accent); }
-  .k-lp-lt { font: 500 var(--t-16) / var(--lh-16) var(--f-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .k-lp-lt { font: 500 var(--t-16) / var(--lh-16) var(--f-body); }
   .k-lp-ln { font: 400 var(--t-16) / var(--lh-16) var(--f-body); color: var(--muted); font-variant-numeric: tabular-nums; }
   .k-lp-cv { display: flex; color: var(--faint); }
   .k-lp-cmp { display: flex; align-items: center; gap: var(--s-3); width: calc(100% - 2 * var(--s-4)); height: var(--row-1); margin: var(--lp-chip-gap) var(--s-4) 0;
