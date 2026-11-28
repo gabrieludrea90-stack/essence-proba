@@ -3401,6 +3401,8 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-lp-tp b { font: 700 var(--t-28) / var(--lh-28) var(--f-body); color: var(--ink); font-variant-numeric: tabular-nums; }
   .k-lp-bu { display: grid; place-items: center; flex: none; width: var(--bula-card); height: var(--bula-card); border-radius: 50%; color: #fff; }
   .k-lp-gr { margin: 0 var(--s-4); border-radius: var(--r-grup); background: var(--bg); overflow: hidden; }
+  /* fără titlurile grupelor (23 nov, 13:18), dalele și listele stau la distanța dintre carduri, ca dalele între ele */
+  .k-lp-tiles + .k-lp-gr { margin-top: var(--intre-carduri); }
   .k-lp-lr { position: relative; display: grid; grid-template-columns: var(--ic-rand) minmax(0, 1fr) auto var(--ic-sageata); column-gap: var(--s-3);
     align-items: center; width: 100%; min-height: var(--row-g); margin: 0; padding: 0 var(--card-aer); border: 0; border-radius: 0; background: none;
     color: var(--ink); font: inherit; text-align: left; }
