@@ -20,12 +20,18 @@ self.addEventListener('fetch', (e) => {
 
 // Alertele (lot-1a; revizorul 1s-b, 12): mesajul e declarativ (iPhone 18.4+ îl arată și singur); aici îl arătăm mereu
 // noi, ca un mesaj să nu rămână fără notificare (iOS taie abonamentul după push-uri „tăcute”) și ca Android să-l vadă.
+/** Numărul ciocnirii unei alerte (`tag` `c<nr>`, `data.ciocnire` sau `?ciocnire=` din adresă); alertele lucrurilor n-au. */
+const ciocnireDin = (n) => {
+  const nr = n.data?.ciocnire ?? (/^c(\d+)$/.exec(n.tag ?? '')?.[1]) ?? (/[?&]ciocnire=(\d+)/.exec(n.navigate ?? '')?.[1]);
+  return nr ? Number(nr) : undefined;
+};
 self.addEventListener('push', (e) => {
   let m = {};
   try { m = e.data?.json() ?? {}; } catch { /* mesaj fără JSON */ }
   const n = m.notification ?? {};
   const arata = self.registration.showNotification(n.title || 'Essence', {
-    body: n.body || '', tag: n.tag, data: { navigate: n.navigate, lucru: n.data?.lucru ?? n.tag },
+    body: n.body || '', tag: n.tag, data: { navigate: n.navigate, lucru: n.data?.ciocnire || /^c\d+$/.test(n.tag ?? '') ? undefined : n.data?.lucru ?? n.tag,
+      ciocnire: ciocnireDin(n) },
     icon: 'icon-192.png', badge: 'icon-192.png' });
   // Întâi notificarea; ora sosirii e doar o măsurătoare, iar o eroare a ei nu atinge alerta (lot-1a).
   e.waitUntil(arata.then(() => (n.data?.sosit_la ? fetch(n.data.sosit_la, {
@@ -39,14 +45,14 @@ self.addEventListener('push', (e) => {
 const ATINS = 'essence-atins';
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const { navigate, lucru } = e.notification.data ?? {};
+  const { navigate, lucru, ciocnire } = e.notification.data ?? {};
   const aici = new URL('./', location.href).href;
   e.waitUntil((async () => {
-    if (lucru) await caches.open(ATINS).then((c) => c.put('atins', new Response(JSON.stringify({ lucru, la: Date.now() })))).catch(() => {});
+    if (lucru || ciocnire) await caches.open(ATINS).then((c) => c.put('atins', new Response(JSON.stringify({ lucru, ciocnire, la: Date.now() })))).catch(() => {});
     const ferestre = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const f = ferestre.find((c) => c.url.startsWith(aici));
-    if (f) { f.postMessage({ lucru }); await f.focus().catch(() => {}); return; }
-    await self.clients.openWindow(navigate || `./?lucru=${encodeURIComponent(lucru ?? '')}`);
+    if (f) { f.postMessage({ lucru, ciocnire }); await f.focus().catch(() => {}); return; }
+    await self.clients.openWindow(navigate || (ciocnire ? `./?ciocnire=${ciocnire}` : `./?lucru=${encodeURIComponent(lucru ?? '')}`));
   })());
 });
 
