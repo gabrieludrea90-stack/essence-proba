@@ -3474,13 +3474,11 @@ html, body { background: var(--bg); color: var(--ink); }
   @keyframes k-lp-pleaca { to { clip-path: inset(0 0 100% 0); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .k-lp-mut, .k-lp-iese, .k-lp-pleaca { animation: none; } }
   .k-lp-fin .k-lp-sn { font-weight: 600; }
-  /* Cumpărăturile (L3a-2): „În coș” are sub titlu linia „N articole · Finalizează ›” (stinsă până la L4); rândul pus acum
+  /* Cumpărăturile (L3a-2): „În coș” are sub titlu linia „N articole · Finalizează ›” (aprinsă din L4b); rândul pus acum
      sau de celălalt se luminează o clipă pe fondul accentului tonal (ca în Ziua), fără tranziție la Mișcare redusă */
   .k-lp-cs { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0; min-height: var(--tap); padding: 0 var(--s-4);
     border: 0; background: none; color: var(--muted); font: 400 var(--t-13) / var(--lh-13) var(--f-body); text-align: left; }
   .k-lp-cs:active { transform: none; }
-  /* numărul („4 articole”) e informație și se citește; doar „Finalizează ›” e stins până la L4 (modul C, 26 nov: 2,1:1 stins) */
-  .k-lp-cs[aria-disabled="true"] .k-lp-cf { opacity: var(--stins); }
   .k-lp-cf { display: flex; align-items: center; gap: var(--s-1); color: var(--accent); font-weight: 600; }
   .k-r[data-luminat] > .k-rand.k-lp-r { background: var(--accent-soft); transition: background var(--lp-lumina); }
   @media (prefers-reduced-motion: reduce) { .k-r[data-luminat] > .k-rand.k-lp-r { transition: none; } }
@@ -3619,6 +3617,20 @@ html, body { background: var(--bg); color: var(--ink); }
   .k-fi-pc .k-bani-in:placeholder-shown { flex: 1; width: auto; }
   .k-fi-pc.total .k-bani-in { flex: 1; width: auto; text-align: right; color: var(--muted); }
   .k-fi-pc .k-bani-m { flex: none; color: var(--muted); }
+}
+
+/* Foaia „Finalizează cumpărăturile” (L4b; `docs/lot-liste-l4.md`, F1–F10): suma mare atinsă (aceeași mărime ca numărul
+   din foaia „Cantitate”, `--cant-mare`), problema de deasupra butonului și butonul plin jos. Valorile vin din
+   `tokenuri.css`; nimic propriu. */
+@layer componente {
+  /* suma mare, ca un buton fără înfățișare: ținta de 44 din jurul textului */
+  .k-fin-suma { min-height: var(--tap); margin: 0; padding: 0 var(--s-3); border: 0; background: none; color: var(--ink);
+    font: 600 var(--cant-mare) / var(--lh-34) var(--f-body); -webkit-tap-highlight-color: transparent; }
+  .k-fin-suma.gol { color: var(--faint); }
+  .k-fin-suma:active { transform: none; opacity: var(--lp-apasat); }
+  /* coșul schimbat între timp (9b): chihlimbar, centrat, deasupra butonului */
+  .k-fin-pb { margin: var(--s-3) var(--card-aer) 0; text-align: center; color: var(--chihlimbar); font: 400 var(--t-13) / var(--lh-13) var(--f-body); }
+  .k-fin-jos { padding: var(--s-4) var(--card-aer) var(--s-4); }
 }
 
 /* Locurile Cumpărăturilor (L3c; planșa `locurile`; `docs/lot-liste-l3.md`, P1–P6): foaia „Locuri și secțiuni” (titlul tipului cu
